@@ -5,27 +5,25 @@
 
 // common
 
-$main-color:                            #9797C4             !default;
+$main-color: #9797c4 !default;
 
-
-$rounded-corner:                        0.76rem             !default;
-$main-font-family:                      'Open Sans'         !default;
-$main-font-size:                        13px                !default;
-$font:                                  $main-font-size $main-font-family, "Helvetica Neue", "Helvetica", "Arial", sans-serif !default;
+$rounded-corner: 0.76rem !default;
+$main-font-family: 'Open Sans' !default;
+$main-font-size: 13px !default;
+$font: $main-font-size $main-font-family, 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif !default;
 
 // sizes
-$dlg-auth-width:                        46.92rem            !default;
-$dlg-auth-height:                       24.54rem            !default;
-$VizelDashlet-header-height:            2.54rem             !default;
-$shell-header-height:                   3.538rem            !default;
-$shell-dataset-title-height:            2.384rem            !default;
-$horizontal-panel-width:                26.923rem           !default;
-$periods-panel-height:                  5.92rem             !default;
-$periods-panel-top-offset:              calc(#{$shell-header-height} + #{$shell-dataset-title-height}) !default;
-$dashboards-header-height:              3.076rem            !default;
-$periods-panel-height-x2:               9.23rem             !default;
-$header-height:                         3.08rem             !default;
-
+$dlg-auth-width: 46.92rem !default;
+$dlg-auth-height: 24.54rem !default;
+$VizelDashlet-header-height: 2.54rem !default;
+$shell-header-height: 3.538rem !default;
+$shell-dataset-title-height: 2.384rem !default;
+$horizontal-panel-width: 26.923rem !default;
+$periods-panel-height: 5.92rem !default;
+$periods-panel-top-offset: calc(#{$shell-header-height} + #{$shell-dataset-title-height}) !default;
+$dashboards-header-height: 3.076rem !default;
+$periods-panel-height-x2: 9.23rem !default;
+$header-height: 3.08rem !default;
 
 $huge: 1.9rem;
 $large: 1.3rem;
@@ -36,27 +34,26 @@ $small: 1rem;
 // https://coolors.co/176a6e-e63946-f1faee-a8dadc-1d3557
 // https://coolors.co/176a6e-e63946-efefef-a8dadc-1d3557
 
-$primary:       #1D3557 !default;
-$light:         #A8DADC !default;
-$red:           #960200 !default;
-$green:         #5BA221 !default;
-$yellow:        #F3DE2C !default;
-$background:    #FFFFFF !default;
+$primary: #1d3557 !default;
+$light: #a8dadc !default;
+$red: #960200 !default;
+$green: #5ba221 !default;
+$yellow: #f3de2c !default;
+$background: #ffffff !default;
 
 // 455a64
 
-$active-color:                          #64b5f6             !default;
-$shell-header-color:                    #ffffff             !default;
-$shell-header-gradient-start:           #575757             !default;
-$shell-header-gradient-end:             #232323             !default;
-$shell-dataset-title-background:        #000000             !default;
-
+$active-color: #64b5f6 !default;
+$shell-header-color: #ffffff !default;
+$shell-header-gradient-start: #575757 !default;
+$shell-header-gradient-end: #232323 !default;
+$shell-dataset-title-background: #000000 !default;
 
 // behaviour
-$shell-header-display-logo:             true                !default;
-$shell-header-display-logout:           true                !default;
-$shell-header-display-toolbar:          true                !default;
-$hasDatasetsList:                       false               !default;
+$shell-header-display-logo: true !default;
+$shell-header-display-logout: true !default;
+$shell-header-display-toolbar: true !default;
+$hasDatasetsList: false !default;
 
 // will be available to in code
 :export {
@@ -97,7 +94,7 @@ $hasDatasetsList:                       false               !default;
   @include transform(translate(-50%, -50%));
 }
 
-@mixin gradient ($startColor: #eee, $endColor: white) {
+@mixin gradient($startColor: #eee, $endColor: white) {
   background: $startColor;
   background: -webkit-gradient(linear, left top, left bottom, from($startColor), to($endColor));
   background: -webkit-linear-gradient(top, $startColor, $endColor);
@@ -121,5 +118,8 @@ $hasDatasetsList:                       false               !default;
 
 @function convertToRem($fontSize) {
   $fontSize: strip-unit($fontSize);
-  @return calc( #{$fontSize + rem} / 13 );
+  @return calc(#{$fontSize + rem} / 13);
 }
+
+$backgroundGradient: linear-gradient(#000a3a 16%, #071140 30%, #121b48 41%, #151e4a 51%, #16204b 64%, #242e7e 92%);
+$dropdownBackgroundColor: #b5bbdb;
