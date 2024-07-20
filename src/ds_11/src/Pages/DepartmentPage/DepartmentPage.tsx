@@ -7,6 +7,7 @@ import { MainDepartmentBlock } from '../../Components/MainDepartmentBlock/MainDe
 export const DepartmentPage = () => {
   return (
     <main className="departmentPage">
+      <h1 style={{ display: 'none' }}>Страница департамента</h1>
       <FiltersBlock />
       <MainDepartmentBlock />
     </main>

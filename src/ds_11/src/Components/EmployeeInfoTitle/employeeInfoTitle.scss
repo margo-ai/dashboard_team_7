@@ -1,0 +1,23 @@
+.employeeTitle {
+  margin-top: 50px;
+  border-radius: 8px;
+  padding: 8px;
+  background-image: linear-gradient(to left, #000b40 75%, #0f30d3);
+  display: flex;
+  align-items: center;
+
+  &__icon {
+    width: 41px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    margin-right: 16px;
+  }
+
+  h2 {
+    color: #c3c5cf;
+    font-size: 28px;
+    line-height: 36px;
+    font-weight: 300;
+  }
+}

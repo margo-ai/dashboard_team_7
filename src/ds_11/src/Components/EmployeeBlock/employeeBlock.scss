@@ -1,0 +1,18 @@
+.employeeDetails {
+  background-color: #252f6b;
+  border-radius: 8px;
+  padding: 12px 13px 15px 13px;
+
+  margin-top: 20px;
+
+  &__item {
+    font-size: 28px;
+    line-height: 36px;
+    padding: 14px 28px;
+    border-radius: 8px;
+    background-image: linear-gradient(to left, #000b40 75%, #0f30d3);
+  }
+  &__item:not(:last-child) {
+    margin-bottom: 12px;
+  }
+}
