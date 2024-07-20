@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Dropdown } from 'primereact/dropdown';
 import { DropdownIcon } from '../ui/DropdownIcon/DropdownIcon';
-import { DropdownRightIcon } from '../ui/DropdownRightIcon/DropdownRightIcon';
+import { DropdownUpIcon } from '../ui/DropdownUpIcon/DropdownUpIcon';
 
 import './selectFilters.scss';
 
@@ -34,7 +34,7 @@ export const SelectFilters = () => {
         // placeholder="Select a City"
         // defaultValue={departments[0].value}
         dropdownIcon={(opts) => {
-          return opts.iconProps['data-pr-overlay-visible'] ? <DropdownRightIcon /> : <DropdownIcon />;
+          return opts.iconProps['data-pr-overlay-visible'] ? <DropdownUpIcon /> : <DropdownIcon />;
         }}
       />
     </div>

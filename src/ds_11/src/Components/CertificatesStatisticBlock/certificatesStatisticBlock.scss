@@ -1,0 +1,53 @@
+@import '../../../../vars.scss';
+
+.certificatesStatistickBlock {
+  background-image: $backgroundGradient;
+  padding: 30px 20px; //отход от макета, нужно ли править?
+  border-radius: 20px;
+
+  width: 50%;
+  max-width: 362px;
+
+  &__icon {
+    width: 98px;
+    height: 92px;
+    background-color: #582cff;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__details {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  &__count,
+  &__percent {
+    font-size: 40px;
+    line-height: 40px;
+    font-weight: 800;
+  }
+
+  &__info {
+    display: flex;
+    gap: 41px;
+  }
+
+  &__title {
+    margin-top: 22px;
+    font-size: 22px;
+    line-height: 24px;
+    font-weight: 800;
+    text-align: center;
+  }
+
+  & .percent-plus {
+    color: $percentPlus;
+  }
+  & .percent-minus {
+    color: $percentMinus;
+  }
+}

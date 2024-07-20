@@ -2,11 +2,13 @@ import React from 'react';
 
 import './departmentPage.scss';
 import { FiltersBlock } from '../../Components/FiltersBlock/FiltersBlock';
+import { MainDepartmentBlock } from '../../Components/MainDepartmentBlock/MainDepartmentBlock';
 
 export const DepartmentPage = () => {
   return (
-    <div className="departmentPage">
+    <main className="departmentPage">
       <FiltersBlock />
-    </div>
+      <MainDepartmentBlock />
+    </main>
   );
 };

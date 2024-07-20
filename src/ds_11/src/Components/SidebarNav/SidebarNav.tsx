@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 
 import './sidebarNav.scss';
 import { DepartmentIcon } from '../ui/DepartmentIcon/DepartmentIcon';
@@ -9,16 +9,16 @@ export const SidebarNav = () => {
   return (
     <nav id="sidebarNav">
       <ul>
-        <NavLink to="/department">
+        <Link to="?dboard=1">
           <li>
             <DepartmentIcon />
           </li>
-        </NavLink>
-        <NavLink to="/employee">
+        </Link>
+        <Link to="?dboard=2">
           <li>
             <EmployeeIcon />
           </li>
-        </NavLink>
+        </Link>
       </ul>
     </nav>
   );

@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+// import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.scss';
 
 // @ts-ignore
 import { KoobDataService } from 'bi-internal/services';
-import { PieChartComponent } from '../ds_res/src/Components/PieChart';
 import { Header } from './src/Components/Header/Header';
 import { SidebarNav } from './src/Components/SidebarNav/SidebarNav';
 import { DepartmentPage } from './src/Pages/DepartmentPage/DepartmentPage';
@@ -12,6 +11,7 @@ import { EmployeePage } from './src/Pages/EmployeePage/EmployeePage';
 const { koobDataRequest3 } = KoobDataService;
 
 import { urlState, UrlState } from 'bi-internal/core';
+import { Route } from './src/Components/Route/Route';
 
 const COLORS = [
   '#FF5733',
@@ -51,15 +51,16 @@ function App() {
 
   return (
     <div className="App scroller">
-      <BrowserRouter>
-        {/* <SidebarNav /> */}
-        {/* <Routes>
-          <Route path="/department" element={<DepartmentPage />} />
-          <Route path="/employee" element={<EmployeePage />} />
-          <Route path="*" element={<DepartmentPage />} />
-        </Routes> */}
+      <Header />
+      {/* <SidebarNav /> */}
+      {/* <Route pageName={['1']}>
         <DepartmentPage />
-      </BrowserRouter>
+      </Route>
+      <Route pageName={['2']}>
+        <EmployeePage />
+      </Route> */}
+      {/* <DepartmentPage /> */}
+      <EmployeePage />
     </div>
   );
 }

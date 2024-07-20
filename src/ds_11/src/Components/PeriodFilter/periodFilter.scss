@@ -50,3 +50,11 @@ input[type='text'] {
 .p-monthpicker {
   padding: 8px;
 }
+
+.p-monthpicker-month {
+  transition: all 0.5s ease;
+
+  &:hover {
+    color: #fff;
+  }
+}
