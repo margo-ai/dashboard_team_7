@@ -9,9 +9,9 @@ export const PeriodFilter = () => {
   addLocale('ru', localeForCalendar);
 
   const [dates, setDates] = useState([new Date('01-01-2005'), new Date('12-31-2005')]);
-  useEffect(() => {
-    console.log(dates);
-  }, [dates]);
+  // useEffect(() => {
+  //   console.log(dates);
+  // }, [dates]);
 
   return (
     <div className="periodFilter">

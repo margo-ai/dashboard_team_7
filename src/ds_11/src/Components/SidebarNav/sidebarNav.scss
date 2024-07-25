@@ -1,9 +1,16 @@
-#sidebarNav {
+.sidebarNav {
   background-color: #01264a;
   width: 100px;
   height: 100vh;
-}
 
-#sidebarNav a.active {
-  color: red;
+  li,
+  button {
+    display: flex;
+    justify-content: center;
+  }
+
+  button {
+    height: 70px;
+    width: 72px;
+  }
 }

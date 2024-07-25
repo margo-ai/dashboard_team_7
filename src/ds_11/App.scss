@@ -13,6 +13,16 @@ p {
   padding: 0;
 }
 
+ul {
+  margin-bottom: 0;
+  padding-inline-start: 0;
+}
+
+button {
+  background-color: transparent;
+  border: none;
+}
+
 .App {
   color: #fff;
   font-size: 15px;

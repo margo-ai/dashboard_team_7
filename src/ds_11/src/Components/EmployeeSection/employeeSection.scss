@@ -1,3 +1,11 @@
+.employeeSection {
+  max-width: 480px;
+
+  &__info {
+    margin-top: 44px;
+  }
+}
+
 .employeeDetails {
   background-color: #252f6b;
   border-radius: 8px;
@@ -10,7 +18,7 @@
     line-height: 36px;
     padding: 14px 28px;
     border-radius: 8px;
-    background-image: linear-gradient(to left, #000b40 75%, #0f30d3);
+    background-image: linear-gradient(to left, #000b40 75%, #0f30d3 99%);
   }
   &__item:not(:last-child) {
     margin-bottom: 12px;

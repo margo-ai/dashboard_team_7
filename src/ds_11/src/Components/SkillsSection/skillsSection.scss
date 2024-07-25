@@ -1,0 +1,68 @@
+@import '../../../../vars.scss';
+
+.skillsSection {
+  margin-top: 23px;
+
+  max-width: 474px;
+
+  &__tabs {
+    background-color: #252e55;
+    border-radius: 20px;
+    padding: 71px 68px;
+    margin-top: 26px;
+
+    font-size: 16px;
+    font-weight: 400;
+  }
+
+  &__tab {
+    background-image: $backgroundGradient;
+    border-radius: 28px;
+
+    padding: 14px 27px 14px 35px;
+    text-align: center;
+
+    &:not(:last-child) {
+      margin-bottom: 17.84px;
+    }
+  }
+
+  &__button {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__icon {
+    margin-left: 22px;
+  }
+
+  &__button,
+  &__list {
+    color: #fff;
+  }
+
+  &__list {
+    font-weight: 900;
+    margin-top: 33px;
+  }
+
+  &__item {
+    display: grid;
+    // justify-content: space-between;
+    grid-template-columns: repeat(2, 50%);
+    gap: 12px;
+
+    &:not(:last-child) {
+      margin-bottom: 34px;
+    }
+  }
+
+  &__skill,
+  &__grade {
+    background-color: #353c69;
+    border-radius: 20px;
+    padding: 12px 14px;
+  }
+}

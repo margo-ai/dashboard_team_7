@@ -1,8 +1,7 @@
 .employeeTitle {
-  margin-top: 50px;
   border-radius: 8px;
   padding: 8px;
-  background-image: linear-gradient(to left, #000b40 75%, #0f30d3);
+  background-image: linear-gradient(to left, #000b40 75%, #0f30d3 99%);
   display: flex;
   align-items: center;
 
@@ -11,7 +10,13 @@
     height: 42px;
     display: flex;
     align-items: center;
-    margin-right: 16px;
+    justify-content: center;
+    margin-right: 30px;
+  }
+
+  & .icon-wide {
+    width: 63.12px;
+    height: 47.14px;
   }
 
   h2 {

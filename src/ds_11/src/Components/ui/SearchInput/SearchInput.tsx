@@ -1,26 +1,85 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { KoobDataService } from 'bi-internal/services';
+const { koobDataRequest3 } = KoobDataService;
 
-import { ResetCrossIcon } from '../ResetCrossIcon/ResetCrossIcon';
+import { useAppDispatch, useAppSelector } from '../../../utils/hooks';
+
+import { ResetCrossIcon } from '../iconsComponents/ResetCrossIcon/ResetCrossIcon';
 
 import './searchInput.scss';
+import { setEmployeeData } from '../../../reducers/employeesSlice';
+import { setEmployeeSkills } from '../../../reducers/skillsSlice';
+import { ActionCreatorWithPayload } from '@reduxjs/toolkit';
+import { sortSkillsArray } from '../../../utils/helpers';
 
-export const SearchInput = () => {
+const changeFirstLetterToUpperCase = (str: string) => {
+  return str[0].toUpperCase() + str.slice(1);
+};
+
+type Props = {
+  setStateFunc: ActionCreatorWithPayload<any, string>;
+  isMainEmployee?: boolean;
+};
+
+export const SearchInput = ({ setStateFunc, isMainEmployee = false }: Props) => {
   const [searchTerm, setSearchTerm] = useState('');
+
+  const dispatch = useAppDispatch();
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
-    console.log(e.target.value);
+    // console.log(e.target.value);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Отправить searchTerm на сервер
+
     console.log('Поиск по:', searchTerm);
-    setSearchTerm('');
+    // setSearchTerm('');
+    const searchArray = searchTerm.split(' ');
+    console.log(searchArray);
+
+    koobDataRequest3(
+      'etl_db_7.employee_koob',
+      ['name', 'surname', 'skill_name', 'skill_type', 'email', 'department', 'position', 'grade', 'sort'],
+      [],
+      {
+        surname: ['=', changeFirstLetterToUpperCase(searchArray[1])],
+        name: ['=', changeFirstLetterToUpperCase(searchArray[0])],
+        highest_grade: ['=', '1']
+      },
+      { schema_name: 'ds_11' },
+      'ourRequest'
+    ).then((res) => {
+      console.log({ res });
+      const mappedData = res.map((el, i) => {
+        return {
+          name: `${el.name} ${el.surname}`,
+          email: el.email,
+          department: el.department,
+          position: el.position,
+          skillType: el.skill_type,
+          skillName: el.skill_name,
+          sort: el.sort,
+          skillGrade: el.grade
+        };
+      });
+
+      console.log({ mapped: mappedData });
+      dispatch(setStateFunc(mappedData));
+
+      if (isMainEmployee) {
+        const sortedSkills = sortSkillsArray(mappedData);
+        const nonEmptySkills = sortedSkills.filter((item) => item.data.length !== 0);
+        dispatch(setEmployeeSkills(nonEmptySkills));
+        console.log({ sortedSkills });
+      }
+    });
   };
 
   const handleClearInput = () => {
     setSearchTerm('');
+    dispatch(setStateFunc([]));
   };
 
   return (

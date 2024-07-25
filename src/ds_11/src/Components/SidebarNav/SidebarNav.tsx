@@ -1,24 +1,35 @@
 import React from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { UrlState } from 'bi-internal/core';
+
+import { DepartmentIcon } from '../ui/iconsComponents/DepartmentIcon/DepartmentIcon';
+import { EmployeeIcon } from '../ui/iconsComponents/EmployeeIcon/EmployeeIcon';
+import { navigateToDboard } from '../../utils/helpers';
 
 import './sidebarNav.scss';
-import { DepartmentIcon } from '../ui/DepartmentIcon/DepartmentIcon';
-import { EmployeeIcon } from '../ui/EmployeeIcon/EmployeeIcon';
 
 export const SidebarNav = () => {
+  const stateCharts = UrlState.getModel();
+  const { dboard } = stateCharts;
+
   return (
-    <nav id="sidebarNav">
+    <nav className="sidebarNav">
       <ul>
-        <Link to="?dboard=1">
-          <li>
+        <li>
+          <button
+            style={{ borderLeft: `${dboard === '1' ? '7px solid #05C696' : ''}` }}
+            onClick={() => navigateToDboard('1')}
+          >
             <DepartmentIcon />
-          </li>
-        </Link>
-        <Link to="?dboard=2">
-          <li>
+          </button>
+        </li>
+        <li>
+          <button
+            style={{ borderLeft: `${dboard === '2' ? '7px solid #05C696' : ''}` }}
+            onClick={() => navigateToDboard('2')}
+          >
             <EmployeeIcon />
-          </li>
-        </Link>
+          </button>
+        </li>
       </ul>
     </nav>
   );

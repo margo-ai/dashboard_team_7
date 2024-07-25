@@ -1,0 +1,68 @@
+.employeesComparisonBlock {
+  background-color: #4d538e;
+  border-radius: 20px;
+  margin-top: 26px;
+  padding: 35px 18px 45px 15px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  max-width: 553px;
+
+  &__name {
+    max-width: 270px;
+    background-image: linear-gradient(to left, #000b40 75%, #0f30d3 99%);
+    border-radius: 8px;
+    padding: 13px 15px;
+    font-size: 20px;
+    font-weight: 400;
+    margin-top: 29.5px;
+  }
+
+  &__radarChart {
+    margin-top: 36px;
+    font-size: 12px;
+
+    g {
+      fill: #fff;
+    }
+  }
+
+  &__filtersAndLegend {
+    margin-top: 28px;
+
+    display: grid;
+    grid-template-columns: repeat(2, 50%);
+    width: 100%;
+  }
+
+  .legendBlock {
+    background-color: #9592b3;
+    border-radius: 20px;
+    padding: 28px 40px;
+
+    max-width: 258px;
+
+    &__item {
+      display: flex;
+      gap: 8px;
+
+      &:first-child {
+        margin-bottom: 16px;
+      }
+    }
+
+    &__color {
+      width: 56px;
+      height: 16px;
+      border-radius: 20px;
+    }
+
+    &__name {
+      font-size: 15px;
+      font-weight: 700;
+      color: #d9d9d9;
+    }
+  }
+}

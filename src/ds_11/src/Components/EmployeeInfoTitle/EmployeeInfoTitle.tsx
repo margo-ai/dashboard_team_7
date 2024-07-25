@@ -1,7 +1,6 @@
 import React from 'react';
 
 import './employeeInfoTitle.scss';
-import { EmployeeTitleIcon } from '../ui/EmployeeTitleIcon/EmployeeTitleIcon';
 
 type Props = {
   title: string;
@@ -11,8 +10,10 @@ type Props = {
 
 export const EmployeeInfoTitle = ({ title, width, children }: Props) => {
   return (
-    <div className="employeeTitle" style={{ width: `${width}px` }}>
-      <div className="employeeTitle__icon">{children}</div>
+    <div className="employeeTitle" style={{ maxWidth: `${width}px` }}>
+      <div className={`${title === 'Сравнение сотрудников' ? 'employeeTitle__icon icon-wide' : 'employeeTitle__icon'}`}>
+        {children}
+      </div>
       <h2>{title}</h2>
     </div>
   );

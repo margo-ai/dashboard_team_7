@@ -4,21 +4,20 @@
   &__title {
     font-weight: 800;
   }
-
-  text-align: center;
-}
-
-input[type='text'] {
-  background-color: $dropdownBackgroundColor;
-  border-radius: 20px;
-  border: none;
-  margin-top: 5px;
-  padding: 5px 10px;
   text-align: center;
 
-  font-size: 20px;
-  font-weight: 600;
-  color: #010a3a;
+  & input[type='text'] {
+    background-color: $dropdownBackgroundColor;
+    border-radius: 20px;
+    border: none;
+    margin-top: 5px;
+    padding: 5px 10px;
+    text-align: center;
+
+    font-size: 20px;
+    font-weight: 600;
+    color: #010a3a;
+  }
 }
 
 .p-calendar {

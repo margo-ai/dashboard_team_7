@@ -1,35 +1,39 @@
 import React, { useEffect, useState } from 'react';
 import { Dropdown } from 'primereact/dropdown';
-import { DropdownIcon } from '../ui/DropdownIcon/DropdownIcon';
-import { DropdownUpIcon } from '../ui/DropdownUpIcon/DropdownUpIcon';
+import { DropdownIcon } from '../ui/iconsComponents/DropdownIcon/DropdownIcon';
+import { DropdownUpIcon } from '../ui/iconsComponents/DropdownUpIcon/DropdownUpIcon';
 
 import './selectFilters.scss';
+import { ActionCreatorWithPayload } from '@reduxjs/toolkit';
 
-export const SelectFilters = () => {
-  const departments = [
-    { name: 'Все отделы', value: 'all' },
-    { name: 'Отдел1', value: 'first' },
-    { name: 'Отдел2', value: 'second' },
-    { name: 'Отдел3', value: 'third' }
-  ];
+import { useAppDispatch, useAppSelector } from '../../utils/hooks';
 
-  const [selectedDepartment, setSelectedDepartment] = useState(null);
+type Props = {
+  options: { name: string; value: string }[];
+  setSelectedFilter: ActionCreatorWithPayload<any, string>;
+};
+
+export const SelectFilters = ({ options, setSelectedFilter }: Props) => {
+  const dispatch = useAppDispatch();
+
+  const [selectedOption, setSelectedOption] = useState(null);
 
   useEffect(() => {
-    console.log(selectedDepartment);
-    setSelectedDepartment(departments[0].value);
+    console.log(selectedOption);
+    setSelectedOption(options[0].value);
   }, []);
 
   useEffect(() => {
-    console.log(selectedDepartment);
-  }, [selectedDepartment]);
+    console.log(selectedOption);
+    dispatch(setSelectedFilter(selectedOption));
+  }, [selectedOption]);
 
   return (
     <div className="selectFilter">
       <Dropdown
-        value={selectedDepartment}
-        onChange={(e) => setSelectedDepartment(e.value)}
-        options={departments}
+        value={selectedOption}
+        onChange={(e) => setSelectedOption(e.value)}
+        options={options}
         optionLabel="name"
         // placeholder="Select a City"
         // defaultValue={departments[0].value}

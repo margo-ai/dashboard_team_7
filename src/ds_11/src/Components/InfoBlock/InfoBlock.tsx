@@ -1,10 +1,10 @@
 import React from 'react';
 
 import './infoBlock.scss';
-import { EmployeesCountIcon } from '../ui/EmployeesCountIcon/EmployeesCountIcon';
+import { EmployeesCountIcon } from '../ui/iconsComponents/EmployeesCountIcon/EmployeesCountIcon';
 import { CertificatesStatistickBlock } from '../CertificatesStatisticBlock/CertificatesStatistickBlock';
-import { CertificateIcon } from '../ui/CertificateIcon/CertificateIcon';
-import { CircleIcon } from '../ui/CircleIcon/CircleIcon';
+import { CertificateIcon } from '../ui/iconsComponents/CertificateIcon/CertificateIcon';
+import { CircleIcon } from '../ui/iconsComponents/CircleIcon/CircleIcon';
 
 export const InfoBlock = () => {
   return (
