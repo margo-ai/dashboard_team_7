@@ -9,7 +9,19 @@ import { EmployeeTitleIcon } from '../ui/iconsComponents/EmployeeTitleIcon/Emplo
 import { useAppDispatch, useAppSelector } from '../../utils/hooks';
 
 import './employeeSection.scss';
-import { setEmployeeData } from '../../reducers/employeesSlice';
+import { setComparisonEmployeeData, setEmployeeData } from '../../reducers/employeesSlice';
+import { sortSkillsArray } from '../../utils/helpers';
+import { setComparisonEmployeeSkills, setEmployeeSkills } from '../../reducers/skillsSlice';
+
+import {
+  setProgLang,
+  setDbms,
+  setFramework,
+  setPlatform,
+  setProgram,
+  setSwT,
+  setTool
+} from '../../reducers/comparisonFiltersSlice';
 
 export const EmployeeSection = () => {
   const dispatch = useAppDispatch();
@@ -20,9 +32,32 @@ export const EmployeeSection = () => {
     console.log({ data: data });
   }, [data]);
 
+  const setDataFunc = (mappedData) => {
+    dispatch(setEmployeeData(mappedData));
+    const sortedSkills = sortSkillsArray(mappedData);
+    dispatch(setEmployeeSkills(sortedSkills));
+    console.log({ sortedSkillsMain: sortedSkills });
+  };
+
+  const handleClearFunc = (setSearchTerm) => {
+    setSearchTerm('');
+    dispatch(setEmployeeData([]));
+    dispatch(setComparisonEmployeeData([]));
+    dispatch(setEmployeeSkills([]));
+    dispatch(setComparisonEmployeeSkills([]));
+
+    dispatch(setProgLang('Языки программирования'));
+    dispatch(setDbms('Базы данных'));
+    dispatch(setSwT('Типы систем'));
+    dispatch(setFramework('Фреймворки'));
+    dispatch(setPlatform('Платформы'));
+    dispatch(setTool('Технологии'));
+    dispatch(setProgram('Инструменты'));
+  };
+
   return (
     <section className="employeeSection">
-      <SearchInput setDataFunc={setEmployeeData} isMainEmployee />
+      <SearchInput setDataFunc={setDataFunc} isMainEmployee handleClearFunc={handleClearFunc} />
       <div className="employeeSection__info">
         <EmployeeInfoTitle title="Сотрудник" width={271}>
           <EmployeeTitleIcon />

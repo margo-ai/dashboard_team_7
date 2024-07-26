@@ -17,11 +17,12 @@ const changeFirstLetterToUpperCase = (str: string) => {
 };
 
 type Props = {
-  setDataFunc: ActionCreatorWithPayload<any, string>;
+  setDataFunc: (mappedData: any) => void;
   isMainEmployee?: boolean;
+  handleClearFunc: (setSearchTerm: React.Dispatch<React.SetStateAction<string>>) => void;
 };
 
-export const SearchInput = ({ setDataFunc, isMainEmployee = false }: Props) => {
+export const SearchInput = ({ setDataFunc, handleClearFunc }: Props) => {
   const [searchTerm, setSearchTerm] = useState('');
 
   const dispatch = useAppDispatch();
@@ -65,32 +66,13 @@ export const SearchInput = ({ setDataFunc, isMainEmployee = false }: Props) => {
         };
       });
 
-      // console.log({ mapped: mappedData });
-      dispatch(setDataFunc(mappedData));
-
-      if (isMainEmployee) {
-        const sortedSkills = sortSkillsArray(mappedData);
-        dispatch(setEmployeeSkills(sortedSkills));
-        console.log({ sortedSkillsMain: sortedSkills });
-      } else {
-        const sortedSkills = sortSkillsArray(mappedData);
-        dispatch(setComparisonEmployeeSkills(sortedSkills));
-        console.log({ sortedSkillsSecond: sortedSkills });
-      }
+      console.log({ mapped: mappedData });
+      setDataFunc(mappedData);
     });
   };
 
   const handleClearInput = () => {
-    setSearchTerm('');
-    dispatch(setDataFunc([]));
-    console.log({ isMainEmployee });
-
-    if (isMainEmployee) {
-      dispatch(setEmployeeSkills([]));
-      dispatch(setComparisonEmployeeSkills([]));
-    } else {
-      dispatch(setComparisonEmployeeSkills([]));
-    }
+    handleClearFunc(setSearchTerm);
   };
 
   return (

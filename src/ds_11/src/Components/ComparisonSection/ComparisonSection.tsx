@@ -8,7 +8,8 @@ import './comparisonSection.scss';
 import { useAppSelector } from '../../utils/hooks';
 
 export const ComparisonSection = () => {
-  const skillsData = useAppSelector((state) => state.skills.mainEmployeeSkills);
+  const employeeData = useAppSelector((state) => state.employee.employeeData);
+  const mainEmployeeSkillsData = useAppSelector((state) => state.skills.mainEmployeeSkills);
 
   return (
     <section className="comparisonSection">

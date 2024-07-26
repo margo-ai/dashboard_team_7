@@ -19,7 +19,8 @@ import {
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, Legend } from 'recharts';
 import { SelectFiltersBlock } from '../SelectFiltersBlock/SelectFiltersBlock';
 import { SelectFilters } from '../SelectFilters/SelectFilters';
-import { getSelectOptionsFromSkillsData, getSortOfCurrentSkill } from '../../utils/helpers';
+import { getSelectOptionsFromSkillsData, getSortOfCurrentSkill, sortSkillsArray } from '../../utils/helpers';
+import { setComparisonEmployeeSkills } from '../../reducers/skillsSlice';
 
 export const EmployeesComparisonBlock = () => {
   const dispatch = useAppDispatch();
@@ -183,9 +184,22 @@ export const EmployeesComparisonBlock = () => {
     dispatch(setProgram('Инструменты'));
   };
 
+  const setDataFunc = (mappedData) => {
+    dispatch(setComparisonEmployeeData(mappedData));
+    const sortedSkills = sortSkillsArray(mappedData);
+    dispatch(setComparisonEmployeeSkills(sortedSkills));
+    console.log({ sortedSkillsSecond: sortedSkills });
+  };
+
+  const handleClearFunc = (setSearchTerm) => {
+    setSearchTerm('');
+    dispatch(setComparisonEmployeeData([]));
+    dispatch(setComparisonEmployeeSkills([]));
+  };
+
   return (
     <div className="employeesComparisonBlock">
-      <SearchInput setStateFunc={setComparisonEmployeeData} />
+      <SearchInput setDataFunc={setDataFunc} handleClearFunc={handleClearFunc} />
       {comparisonEmployeeData.length !== 0 ? (
         <div className="employeesComparisonBlock__name">{comparisonEmployeeData[0].name}</div>
       ) : null}
