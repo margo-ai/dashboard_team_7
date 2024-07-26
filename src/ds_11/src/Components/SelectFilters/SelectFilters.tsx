@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { Dropdown } from 'primereact/dropdown';
 import { DropdownIcon } from '../ui/iconsComponents/DropdownIcon/DropdownIcon';
 import { DropdownUpIcon } from '../ui/iconsComponents/DropdownUpIcon/DropdownUpIcon';
@@ -11,22 +11,27 @@ import { useAppDispatch, useAppSelector } from '../../utils/hooks';
 type Props = {
   options: { name: string; value: string }[];
   setSelectedFilter: ActionCreatorWithPayload<any, string>;
+  placeholder?: string;
+  selectedFilter;
 };
 
-export const SelectFilters = ({ options, setSelectedFilter }: Props) => {
+export const SelectFilters = ({ options, setSelectedFilter, selectedFilter }: Props) => {
   const dispatch = useAppDispatch();
 
-  const [selectedOption, setSelectedOption] = useState(null);
+  const [selectedOption, setSelectedOption] = useState(options[0].value);
 
   useEffect(() => {
-    console.log(selectedOption);
-    setSelectedOption(options[0].value);
-  }, []);
+    // console.log({ selectedOption, selectedFilter });
+    if (selectedFilter === options[0].value) {
+      setSelectedOption(options[0].value);
+    }
+  }, [selectedFilter]);
 
   useEffect(() => {
-    console.log(selectedOption);
+    // console.log({ selectedOption });
     dispatch(setSelectedFilter(selectedOption));
   }, [selectedOption]);
+  // console.log({ placeholder });
 
   return (
     <div className="selectFilter">
@@ -35,8 +40,7 @@ export const SelectFilters = ({ options, setSelectedFilter }: Props) => {
         onChange={(e) => setSelectedOption(e.value)}
         options={options}
         optionLabel="name"
-        // placeholder="Select a City"
-        // defaultValue={departments[0].value}
+        // placeholder={placeholder}
         dropdownIcon={(opts) => {
           return opts.iconProps['data-pr-overlay-visible'] ? <DropdownUpIcon /> : <DropdownIcon />;
         }}

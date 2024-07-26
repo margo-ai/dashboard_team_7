@@ -9,6 +9,7 @@ import { BigDownArrowIcon } from '../ui/iconsComponents/BigDownArrowIcon/BigDown
 import { BigUpArrowIcon } from '../ui/iconsComponents/BigUpArrowIcon/BigUpArrowIcon';
 
 export const SkillsSection = () => {
+  const employeeData = useAppSelector((state) => state.employee.employeeData);
   const skillsData = useAppSelector((state) => state.skills.skills);
 
   const [isOpen, setIsOpen] = useState(false);
@@ -28,32 +29,36 @@ export const SkillsSection = () => {
   }, [skillsData]);
 
   return (
-    <section className="skillsSection">
-      <EmployeeInfoTitle title="Навыки" width={271}>
-        <SkillsTitleIcon />
-      </EmployeeInfoTitle>
-      <div className="skillsSection__tabs">
-        {skillsData.map((skill) => (
-          <div className="skillsSection__tab">
-            <button className="skillsSection__button" onClick={() => handleTabClick(skill.skillType)}>
-              {skill.skillType}
-              <div className="skillsSection__icon">
-                {activeTab === skill.skillType ? <BigUpArrowIcon /> : <BigDownArrowIcon />}
+    <>
+      {employeeData.length !== 0 && (
+        <section className="skillsSection">
+          <EmployeeInfoTitle title="Навыки" width={271}>
+            <SkillsTitleIcon />
+          </EmployeeInfoTitle>
+          <div className="skillsSection__tabs">
+            {skillsData.map((skill) => (
+              <div className="skillsSection__tab">
+                <button className="skillsSection__button" onClick={() => handleTabClick(skill.skillType)}>
+                  {skill.skillType}
+                  <div className="skillsSection__icon">
+                    {activeTab === skill.skillType ? <BigUpArrowIcon /> : <BigDownArrowIcon />}
+                  </div>
+                </button>
+                {activeTab === skill.skillType && (
+                  <ul className="skillsSection__list">
+                    {skill.data.map((skill) => (
+                      <li className="skillsSection__item">
+                        <div className="skillsSection__skill">{skill.skill}</div>
+                        <div className="skillsSection__grade">{skill.grade}</div>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
-            </button>
-            {activeTab === skill.skillType && (
-              <ul className="skillsSection__list">
-                {skill.data.map((skill) => (
-                  <li className="skillsSection__item">
-                    <div className="skillsSection__skill">{skill.skill}</div>
-                    <div className="skillsSection__grade">{skill.grade}</div>
-                  </li>
-                ))}
-              </ul>
-            )}
+            ))}
           </div>
-        ))}
-      </div>
-    </section>
+        </section>
+      )}
+    </>
   );
 };

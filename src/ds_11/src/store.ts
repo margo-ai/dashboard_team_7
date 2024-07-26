@@ -3,9 +3,10 @@ import { configureStore } from '@reduxjs/toolkit';
 import employee from './reducers/employeesSlice';
 import filters from './reducers/filtersReducer';
 import skills from './reducers/skillsSlice';
+import comparisonFilters from './reducers/comparisonFiltersSlice';
 
 const store = configureStore({
-  reducer: { employee, filters, skills },
+  reducer: { employee, filters, skills, comparisonFilters },
   devTools: process.env.NODE_ENV !== 'production'
 });
 

@@ -5,8 +5,11 @@ import { ComparisonTitleIcon } from '../ui/iconsComponents/ComparisonTitleIcon/C
 import { EmployeesComparisonBlock } from '../EmployeesComparisonBlock/EmployeesComparisonBlock';
 
 import './comparisonSection.scss';
+import { useAppSelector } from '../../utils/hooks';
 
 export const ComparisonSection = () => {
+  const skillsData = useAppSelector((state) => state.skills.skills);
+
   return (
     <section className="comparisonSection">
       <EmployeeInfoTitle title="Сравнение сотрудников" width={447}>

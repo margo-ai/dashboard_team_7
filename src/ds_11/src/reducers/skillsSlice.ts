@@ -4,6 +4,7 @@ type TSstate = {
   skills: {
     skillType: string;
     data: {
+      sort: number;
       skill: string;
       grade: string;
     }[];
