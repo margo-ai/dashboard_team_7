@@ -10,7 +10,7 @@ import { BigUpArrowIcon } from '../ui/iconsComponents/BigUpArrowIcon/BigUpArrowI
 
 export const SkillsSection = () => {
   const employeeData = useAppSelector((state) => state.employee.employeeData);
-  const skillsData = useAppSelector((state) => state.skills.skills);
+  const skillsData = useAppSelector((state) => state.skills.mainEmployeeSkills);
 
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState(null);

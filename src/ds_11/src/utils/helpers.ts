@@ -35,7 +35,7 @@ export const sortSkillsArray = (mappedData: TMappedData) => {
   const tool = skillCategories['tool'];
   const program = skillCategories['program'];
 
-  return [
+  const sortedSkills = [
     { skillType: 'Языки программирования', data: progLang },
     { skillType: 'Базы данных', data: dbms },
     { skillType: 'Типы систем', data: swT },
@@ -44,6 +44,10 @@ export const sortSkillsArray = (mappedData: TMappedData) => {
     { skillType: 'Технологии', data: tool },
     { skillType: 'Инструменты', data: program }
   ];
+
+  const nonEmptySkills = sortedSkills.filter((item) => item.data.length !== 0);
+
+  return nonEmptySkills;
 };
 
 type TSkillsData = {

@@ -37,88 +37,141 @@ export const EmployeesComparisonBlock = () => {
   const toolFilter = useAppSelector((state) => state.comparisonFilters.tool.skill);
   const programFilter = useAppSelector((state) => state.comparisonFilters.program.skill);
 
-  const skillsData = useAppSelector((state) => state.skills.skills);
+  const mainEmployeeSkillsData = useAppSelector((state) => state.skills.mainEmployeeSkills);
+  const secondEmployeeSkillsData = useAppSelector((state) => state.skills.comparisonEmployeeSkills);
 
   const [radarData, setRadarData] = useState([]);
 
-  // const data = [
-  //   {
-  //     skill: 'Chinesafadsfase'
-  //     // A: 420,
-  //     // B: 350,
-  //     // fullMark: 500
-  //   },
-  //   {
-  //     skill: 'ff'
-  //     // A: 280,
-  //     // B: 490,
-  //     // fullMark: 500
-  //   },
-  //   {
-  //     skill: 'ccc'
-  //     // A: 250,
-  //     // B: 199,
-  //     // fullMark: 500
-  //   },
-  //   {
-  //     skill: 'Phyvvvsics'
-  //     // A: 500,
-  //     // B: 350,
-  //     // fullMark: 500
-  //   },
-  //   {
-  //     skill: 'aaa'
-  //     // A: 350,
-  //     // B: 300,
-  //     // fullMark: 500
-  //   }
-  // ];
-
   useEffect(() => {
-    if (skillsData.length !== 0) {
-      const options = getSelectOptionsFromSkillsData(skillsData);
+    if (mainEmployeeSkillsData.length !== 0) {
+      const options = getSelectOptionsFromSkillsData(mainEmployeeSkillsData);
       setFiltersOptions(options);
       console.log({ options });
 
       let data = [];
-      for (let i = 0; i < skillsData.length; i++) {
-        data.push({ type: skillsData[i].skillType, skill: skillsData[i].skillType, sort: 0 });
+      for (let i = 0; i < mainEmployeeSkillsData.length; i++) {
+        data.push({
+          type: mainEmployeeSkillsData[i].skillType,
+          skill: mainEmployeeSkillsData[i].skillType,
+          mainSort: 0
+        });
       }
       console.log({ data });
       setRadarData(data);
     }
-  }, [skillsData]);
+  }, [mainEmployeeSkillsData]);
 
   useEffect(() => {
-    const langSort = getSortOfCurrentSkill(skillsData, 'Языки программирования', progLangFilter);
-    const dbmsSort = getSortOfCurrentSkill(skillsData, 'Базы данных', dbmsFilter);
-    const swTSort = getSortOfCurrentSkill(skillsData, 'Типы систем', swTFilter);
-    const frameworkSort = getSortOfCurrentSkill(skillsData, 'Фреймворки', frameworkFilter);
-    const platformSort = getSortOfCurrentSkill(skillsData, 'Платформы', platformFilter);
-    const toolSort = getSortOfCurrentSkill(skillsData, 'Технологии', toolFilter);
-    const programSort = getSortOfCurrentSkill(skillsData, 'Инструменты', programFilter);
+    if (secondEmployeeSkillsData.length === 0) {
+      const langSortMain = getSortOfCurrentSkill(mainEmployeeSkillsData, 'Языки программирования', progLangFilter);
+      const dbmsSortMain = getSortOfCurrentSkill(mainEmployeeSkillsData, 'Базы данных', dbmsFilter);
+      const swTSortMain = getSortOfCurrentSkill(mainEmployeeSkillsData, 'Типы систем', swTFilter);
+      const frameworkSortMain = getSortOfCurrentSkill(mainEmployeeSkillsData, 'Фреймворки', frameworkFilter);
+      const platformSortMain = getSortOfCurrentSkill(mainEmployeeSkillsData, 'Платформы', platformFilter);
+      const toolSortMain = getSortOfCurrentSkill(mainEmployeeSkillsData, 'Технологии', toolFilter);
+      const programSortMain = getSortOfCurrentSkill(mainEmployeeSkillsData, 'Инструменты', programFilter);
 
-    console.log({ langSort, dbmsSort });
-    const newData = radarData.map((item) => {
-      if (item.type === 'Языки программирования') {
-        return { ...item, skill: progLangFilter, sort: langSort };
-      } else if (item.type === 'Базы данных') {
-        return { ...item, skill: dbmsFilter, sort: dbmsSort };
-      } else if (item.type === 'Типы систем') {
-        return { ...item, skill: swTFilter, sort: swTSort };
-      } else if (item.type === 'Фреймворки') {
-        return { ...item, skill: frameworkFilter, sort: frameworkSort };
-      } else if (item.type === 'Платформы') {
-        return { ...item, skill: platformFilter, sort: platformSort };
-      } else if (item.type === 'Технологии') {
-        return { ...item, skill: toolFilter, sort: toolSort };
-      } else if (item.type === 'Инструменты') {
-        return { ...item, skill: programFilter, sort: programSort };
-      }
-    });
-    console.log({ newData });
-    setRadarData(newData);
-  }, [progLangFilter, dbmsFilter, swTFilter, frameworkFilter, platformFilter, toolFilter, programFilter]);
+      console.log({ langSortMain, dbmsSortMain });
+      const newData = radarData.map((item) => {
+        if (item.type === 'Языки программирования') {
+          return { ...item, skill: progLangFilter, mainSort: langSortMain, secondSort: 0 };
+        } else if (item.type === 'Базы данных') {
+          return { ...item, skill: dbmsFilter, mainSort: dbmsSortMain, secondSort: 0 };
+        } else if (item.type === 'Типы систем') {
+          return { ...item, skill: swTFilter, mainSort: swTSortMain, secondSort: 0 };
+        } else if (item.type === 'Фреймворки') {
+          return { ...item, skill: frameworkFilter, mainSort: frameworkSortMain, secondSort: 0 };
+        } else if (item.type === 'Платформы') {
+          return { ...item, skill: platformFilter, mainSort: platformSortMain, secondSort: 0 };
+        } else if (item.type === 'Технологии') {
+          return { ...item, skill: toolFilter, mainSort: toolSortMain, secondSort: 0 };
+        } else if (item.type === 'Инструменты') {
+          return { ...item, skill: programFilter, mainSort: programSortMain, secondSort: 0 };
+        }
+      });
+
+      console.log({ dataWithout: newData });
+      setRadarData(newData);
+    } else {
+      const langSortMain = getSortOfCurrentSkill(mainEmployeeSkillsData, 'Языки программирования', progLangFilter);
+      const dbmsSortMain = getSortOfCurrentSkill(mainEmployeeSkillsData, 'Базы данных', dbmsFilter);
+      const swTSortMain = getSortOfCurrentSkill(mainEmployeeSkillsData, 'Типы систем', swTFilter);
+      const frameworkSortMain = getSortOfCurrentSkill(mainEmployeeSkillsData, 'Фреймворки', frameworkFilter);
+      const platformSortMain = getSortOfCurrentSkill(mainEmployeeSkillsData, 'Платформы', platformFilter);
+      const toolSortMain = getSortOfCurrentSkill(mainEmployeeSkillsData, 'Технологии', toolFilter);
+      const programSortMain = getSortOfCurrentSkill(mainEmployeeSkillsData, 'Инструменты', programFilter);
+
+      console.log({ langSortMain, dbmsSortMain });
+      const newData = radarData.map((item) => {
+        if (item.type === 'Языки программирования') {
+          return { ...item, skill: progLangFilter, mainSort: langSortMain };
+        } else if (item.type === 'Базы данных') {
+          return { ...item, skill: dbmsFilter, mainSort: dbmsSortMain };
+        } else if (item.type === 'Типы систем') {
+          return { ...item, skill: swTFilter, mainSort: swTSortMain };
+        } else if (item.type === 'Фреймворки') {
+          return { ...item, skill: frameworkFilter, mainSort: frameworkSortMain };
+        } else if (item.type === 'Платформы') {
+          return { ...item, skill: platformFilter, mainSort: platformSortMain };
+        } else if (item.type === 'Технологии') {
+          return { ...item, skill: toolFilter, mainSort: toolSortMain };
+        } else if (item.type === 'Инструменты') {
+          return { ...item, skill: programFilter, mainSort: programSortMain };
+        }
+      });
+
+      const langSortSecond = getSortOfCurrentSkill(secondEmployeeSkillsData, 'Языки программирования', progLangFilter);
+      const dbmsSortSecond = getSortOfCurrentSkill(secondEmployeeSkillsData, 'Базы данных', dbmsFilter);
+      const swTSortSecond = getSortOfCurrentSkill(secondEmployeeSkillsData, 'Типы систем', swTFilter);
+      const frameworkSortSecond = getSortOfCurrentSkill(secondEmployeeSkillsData, 'Фреймворки', frameworkFilter);
+      const platformSortSecond = getSortOfCurrentSkill(secondEmployeeSkillsData, 'Платформы', platformFilter);
+      const toolSortSecond = getSortOfCurrentSkill(secondEmployeeSkillsData, 'Технологии', toolFilter);
+      const programSortSecond = getSortOfCurrentSkill(secondEmployeeSkillsData, 'Инструменты', programFilter);
+
+      console.log({
+        langSortSecond,
+        dbmsSortSecond,
+        swTSortSecond,
+        frameworkSortSecond,
+        platformSortSecond,
+        toolSortSecond,
+        programSortSecond
+      });
+
+      let dataWithSecondEmployee;
+
+      console.log({ secondEmployee: secondEmployeeSkillsData });
+      dataWithSecondEmployee = newData.map((item) => {
+        if (item.type === 'Языки программирования') {
+          return { ...item, secondSort: langSortSecond === undefined ? 0 : langSortSecond };
+        } else if (item.type === 'Базы данных') {
+          return { ...item, secondSort: dbmsSortSecond === undefined ? 0 : dbmsSortSecond };
+        } else if (item.type === 'Типы систем') {
+          return { ...item, secondSort: swTSortSecond === undefined ? 0 : swTSortSecond };
+        } else if (item.type === 'Фреймворки') {
+          return { ...item, secondSort: frameworkSortSecond === undefined ? 0 : frameworkSortSecond };
+        } else if (item.type === 'Платформы') {
+          return { ...item, secondSort: platformSortSecond === undefined ? 0 : platformSortSecond };
+        } else if (item.type === 'Технологии') {
+          return { ...item, secondSort: toolSortSecond === undefined ? 0 : toolSortSecond };
+        } else if (item.type === 'Инструменты') {
+          return { ...item, secondSort: programSortSecond === undefined ? 0 : programSortSecond };
+        }
+      });
+
+      console.log({ dataWith: dataWithSecondEmployee });
+      setRadarData(dataWithSecondEmployee);
+    }
+  }, [
+    progLangFilter,
+    dbmsFilter,
+    swTFilter,
+    frameworkFilter,
+    platformFilter,
+    toolFilter,
+    programFilter,
+    secondEmployeeSkillsData
+  ]);
 
   const handleButton = () => {
     dispatch(setProgLang('Языки программирования'));
@@ -141,8 +194,8 @@ export const EmployeesComparisonBlock = () => {
           <PolarGrid />
           <PolarAngleAxis dataKey="skill" />
           <PolarRadiusAxis orientation="middle" angle={90} domain={[0, 500]} />
-          {/* <Radar name="Mike" dataKey="sort" stroke="#000B40" fill="#0083FB" fillOpacity={0.6} /> */}
-          <Radar name="Lily" dataKey="sort" stroke="#F765A3" fill="#FFA5CB" fillOpacity={0.6} />
+          <Radar name="Mike" dataKey="secondSort" stroke="#000B40" fill="#0083FB" fillOpacity={0.8} />
+          <Radar name="Lily" dataKey="mainSort" stroke="#F765A3" fill="#FFA5CB" fillOpacity={0.6} />
           {/* <Legend /> */}
         </RadarChart>
       </div>

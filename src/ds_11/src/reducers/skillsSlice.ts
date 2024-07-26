@@ -1,18 +1,22 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-type TSstate = {
-  skills: {
-    skillType: string;
-    data: {
-      sort: number;
-      skill: string;
-      grade: string;
-    }[];
+type TSkillsData = {
+  skillType: string;
+  data: {
+    sort: number;
+    skill: string;
+    grade: string;
   }[];
 };
 
+type TSstate = {
+  mainEmployeeSkills: TSkillsData[];
+  comparisonEmployeeSkills: TSkillsData[];
+};
+
 const initialState: TSstate = {
-  skills: []
+  mainEmployeeSkills: [],
+  comparisonEmployeeSkills: []
 };
 
 const filtersSlice = createSlice({
@@ -20,12 +24,15 @@ const filtersSlice = createSlice({
   initialState,
   reducers: {
     setEmployeeSkills: (state, action) => {
-      state.skills = action.payload;
+      state.mainEmployeeSkills = action.payload;
+    },
+    setComparisonEmployeeSkills: (state, action) => {
+      state.comparisonEmployeeSkills = action.payload;
     }
   }
 });
 
 const { actions, reducer } = filtersSlice;
-export const { setEmployeeSkills } = actions;
+export const { setEmployeeSkills, setComparisonEmployeeSkills } = actions;
 
 export default reducer;

@@ -22,7 +22,7 @@ export const EmployeeSection = () => {
 
   return (
     <section className="employeeSection">
-      <SearchInput setStateFunc={setEmployeeData} isMainEmployee />
+      <SearchInput setDataFunc={setEmployeeData} isMainEmployee />
       <div className="employeeSection__info">
         <EmployeeInfoTitle title="Сотрудник" width={271}>
           <EmployeeTitleIcon />

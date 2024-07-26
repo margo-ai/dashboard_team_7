@@ -8,7 +8,7 @@ import { ResetCrossIcon } from '../iconsComponents/ResetCrossIcon/ResetCrossIcon
 
 import './searchInput.scss';
 import { setEmployeeData } from '../../../reducers/employeesSlice';
-import { setEmployeeSkills } from '../../../reducers/skillsSlice';
+import { setEmployeeSkills, setComparisonEmployeeSkills } from '../../../reducers/skillsSlice';
 import { ActionCreatorWithPayload } from '@reduxjs/toolkit';
 import { sortSkillsArray } from '../../../utils/helpers';
 
@@ -17,11 +17,11 @@ const changeFirstLetterToUpperCase = (str: string) => {
 };
 
 type Props = {
-  setStateFunc: ActionCreatorWithPayload<any, string>;
+  setDataFunc: ActionCreatorWithPayload<any, string>;
   isMainEmployee?: boolean;
 };
 
-export const SearchInput = ({ setStateFunc, isMainEmployee = false }: Props) => {
+export const SearchInput = ({ setDataFunc, isMainEmployee = false }: Props) => {
   const [searchTerm, setSearchTerm] = useState('');
 
   const dispatch = useAppDispatch();
@@ -51,7 +51,7 @@ export const SearchInput = ({ setStateFunc, isMainEmployee = false }: Props) => 
       { schema_name: 'ds_11' },
       'ourRequest'
     ).then((res) => {
-      console.log({ res });
+      // console.log({ res });
       const mappedData = res.map((el, i) => {
         return {
           name: `${el.name} ${el.surname}`,
@@ -65,21 +65,32 @@ export const SearchInput = ({ setStateFunc, isMainEmployee = false }: Props) => 
         };
       });
 
-      console.log({ mapped: mappedData });
-      dispatch(setStateFunc(mappedData));
+      // console.log({ mapped: mappedData });
+      dispatch(setDataFunc(mappedData));
 
       if (isMainEmployee) {
         const sortedSkills = sortSkillsArray(mappedData);
-        const nonEmptySkills = sortedSkills.filter((item) => item.data.length !== 0);
-        dispatch(setEmployeeSkills(nonEmptySkills));
-        console.log({ sortedSkills });
+        dispatch(setEmployeeSkills(sortedSkills));
+        console.log({ sortedSkillsMain: sortedSkills });
+      } else {
+        const sortedSkills = sortSkillsArray(mappedData);
+        dispatch(setComparisonEmployeeSkills(sortedSkills));
+        console.log({ sortedSkillsSecond: sortedSkills });
       }
     });
   };
 
   const handleClearInput = () => {
     setSearchTerm('');
-    dispatch(setStateFunc([]));
+    dispatch(setDataFunc([]));
+    console.log({ isMainEmployee });
+
+    if (isMainEmployee) {
+      dispatch(setEmployeeSkills([]));
+      dispatch(setComparisonEmployeeSkills([]));
+    } else {
+      dispatch(setComparisonEmployeeSkills([]));
+    }
   };
 
   return (
