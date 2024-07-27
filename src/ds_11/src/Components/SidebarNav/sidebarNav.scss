@@ -1,7 +1,14 @@
 .sidebarNav {
   background-color: #01264a;
   width: 100px;
-  height: 100vh;
+  // height: 100vh;
+
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  overflow-y: auto;
+  padding-top: 47px;
 
   li,
   button {

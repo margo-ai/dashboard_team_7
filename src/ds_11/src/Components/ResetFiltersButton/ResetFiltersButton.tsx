@@ -4,9 +4,16 @@ import { ResetFiltersIcon } from '../ui/iconsComponents/ResetFiltersIcon/ResetFi
 
 import './resetFiltersButton.scss';
 
-export const ResetFiltersButton = () => {
+type Props = {
+  resetFunc: () => void;
+};
+
+export const ResetFiltersButton = ({ resetFunc }: Props) => {
+  const handleButton = () => {
+    resetFunc();
+  };
   return (
-    <button type="button" className="resetFiltersButton">
+    <button onClick={handleButton} type="button" className="resetFiltersButton">
       <ResetFiltersIcon />
     </button>
   );

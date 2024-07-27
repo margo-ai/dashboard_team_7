@@ -16,11 +16,12 @@ import {
   setTool
 } from '../../reducers/comparisonFiltersSlice';
 
-import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, Legend } from 'recharts';
+import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, Legend, ResponsiveContainer } from 'recharts';
 import { SelectFiltersBlock } from '../SelectFiltersBlock/SelectFiltersBlock';
 import { SelectFilters } from '../SelectFilters/SelectFilters';
 import { getSelectOptionsFromSkillsData, getSortOfCurrentSkill, sortSkillsArray } from '../../utils/helpers';
 import { setComparisonEmployeeSkills } from '../../reducers/skillsSlice';
+import { ResetFiltersButton } from '../ResetFiltersButton/ResetFiltersButton';
 
 export const EmployeesComparisonBlock = () => {
   const dispatch = useAppDispatch();
@@ -57,7 +58,7 @@ export const EmployeesComparisonBlock = () => {
           mainSort: 0
         });
       }
-      console.log({ data });
+      console.log({ mainData: data });
       setRadarData(data);
     }
   }, [mainEmployeeSkillsData]);
@@ -72,7 +73,28 @@ export const EmployeesComparisonBlock = () => {
       const toolSortMain = getSortOfCurrentSkill(mainEmployeeSkillsData, 'Технологии', toolFilter);
       const programSortMain = getSortOfCurrentSkill(mainEmployeeSkillsData, 'Инструменты', programFilter);
 
-      console.log({ langSortMain, dbmsSortMain });
+      console.log({
+        kkkkk: progLangFilter,
+        dbmsFilter,
+        swTFilter,
+        frameworkFilter,
+        platformFilter,
+        toolFilter,
+        programFilter,
+        secondEmployeeSkillsData
+      });
+
+      console.log({
+        langSortMain,
+        dbmsSortMain,
+        swTSortMain,
+        frameworkSortMain,
+        platformSortMain,
+        toolSortMain,
+        programSortMain
+      });
+
+      console.log({ rrrr: radarData });
       const newData = radarData.map((item) => {
         if (item.type === 'Языки программирования') {
           return { ...item, skill: progLangFilter, mainSort: langSortMain, secondSort: 0 };
@@ -90,6 +112,8 @@ export const EmployeesComparisonBlock = () => {
           return { ...item, skill: programFilter, mainSort: programSortMain, secondSort: 0 };
         }
       });
+
+      console.log({ rrrr: radarData });
 
       console.log({ dataWithout: newData });
       setRadarData(newData);
@@ -204,7 +228,7 @@ export const EmployeesComparisonBlock = () => {
         <div className="employeesComparisonBlock__name">{comparisonEmployeeData[0].name}</div>
       ) : null}
       <div className="employeesComparisonBlock__radarChart">
-        <RadarChart outerRadius={200} width={550} height={400} data={radarData}>
+        <RadarChart outerRadius={180} width={500} height={400} data={radarData}>
           <PolarGrid />
           <PolarAngleAxis dataKey="skill" />
           <PolarRadiusAxis orientation="middle" angle={90} domain={[0, 500]} />
@@ -257,22 +281,23 @@ export const EmployeesComparisonBlock = () => {
             </SelectFiltersBlock>
           )}
         </div>
-        <button onClick={handleButton}>Сбросить</button>
-
-        {employeeData.length !== 0 ? (
-          <div className="legendBlock">
-            <div className="legendBlock__item">
-              <div className="legendBlock__color" style={{ backgroundColor: '#FFA5CB' }} />
-              <div className="legendBlock__name">{employeeData[0].name}</div>
-            </div>
-            {comparisonEmployeeData.length !== 0 && (
+        <div className="legendAndResetButtonBlock">
+          {employeeData.length !== 0 ? (
+            <div className="legendBlock">
               <div className="legendBlock__item">
-                <div className="legendBlock__color" style={{ backgroundColor: '#0083FB' }} />
-                <div className="legendBlock__name">{comparisonEmployeeData[0].name}</div>
+                <div className="legendBlock__color" style={{ backgroundColor: '#FFA5CB' }} />
+                <div className="legendBlock__name">{employeeData[0].name}</div>
               </div>
-            )}
-          </div>
-        ) : null}
+              {comparisonEmployeeData.length !== 0 && (
+                <div className="legendBlock__item">
+                  <div className="legendBlock__color" style={{ backgroundColor: '#0083FB' }} />
+                  <div className="legendBlock__name">{comparisonEmployeeData[0].name}</div>
+                </div>
+              )}
+            </div>
+          ) : null}
+          <ResetFiltersButton resetFunc={handleButton} />
+        </div>
       </div>
     </div>
   );

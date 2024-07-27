@@ -12,7 +12,7 @@ export const ComparisonSection = () => {
   const mainEmployeeSkillsData = useAppSelector((state) => state.skills.mainEmployeeSkills);
 
   return (
-    <section className="comparisonSection">
+    <section className="comparisonSection" style={{ display: `${employeeData.length !== 0 ? 'block' : 'none'}` }}>
       <EmployeeInfoTitle title="Сравнение сотрудников" width={447}>
         <ComparisonTitleIcon />
       </EmployeeInfoTitle>

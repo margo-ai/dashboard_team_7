@@ -64,5 +64,13 @@
     background-color: #353c69;
     border-radius: 20px;
     padding: 12px 14px;
+
+    max-width: 119px;
+  }
+
+  &__grade {
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 }

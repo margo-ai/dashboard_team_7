@@ -2,7 +2,13 @@
   width: 100%;
   padding: 24px 36px;
 
-  display: grid;
-  grid-template-columns: repeat(3, auto);
-  gap: 72px;
+  // display: grid;
+  // grid-template-columns: repeat(3, auto);
+  // gap: 72px;
+
+  display: flex;
+  justify-content: space-between;
+  gap: 52px;
+
+  margin-left: 100px;
 }
