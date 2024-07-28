@@ -1,5 +1,5 @@
 export const localeForCalendar = {
-  dateFormat: 'mm.yy',
+  dateFormat: 'yy',
   dayNames: ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'],
   dayNamesMin: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
   dayNamesShort: ['Вск', 'Пнд', 'Втр', 'Срд', 'Чтв', 'Птн', 'Сбт'],
@@ -19,3 +19,5 @@ export const localeForCalendar = {
   ],
   monthNamesShort: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек']
 };
+
+export const minMaxDatesForCalendar = [new Date('2001-01-01'), new Date('2024-07-20')];

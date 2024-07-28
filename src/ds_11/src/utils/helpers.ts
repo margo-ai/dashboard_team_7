@@ -59,8 +59,18 @@ type TSkillsData = {
   }[];
 }[];
 
+type TSkillsOptions = {
+  'Языки программирования': { name: string; value: string }[];
+  'Базы данных': { name: string; value: string }[];
+  'Типы систем': { name: string; value: string }[];
+  Фреймворки: { name: string; value: string }[];
+  Платформы: { name: string; value: string }[];
+  Технологии: { name: string; value: string }[];
+  Инструменты: { name: string; value: string }[];
+};
+
 export const getSelectOptionsFromSkillsData = (skillsData: TSkillsData) => {
-  const skillOptions = {
+  const skillOptions: TSkillsOptions = {
     'Языки программирования': [],
     'Базы данных': [],
     'Типы систем': [],
@@ -81,6 +91,7 @@ export const getSelectOptionsFromSkillsData = (skillsData: TSkillsData) => {
       }
     }
   }
+  console.log({ lalala: skillOptions['Языки программирования'] });
 
   const progLangOptions = skillOptions['Языки программирования'];
   const dbmsOptions = skillOptions['Базы данных'];

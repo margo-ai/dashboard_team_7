@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 
-import { useAppDispatch, useAppSelector } from '../../utils/hooks';
+import { useAppDispatch, useAppSelector } from '../../../utils/hooks';
 
 import './skillsSection.scss';
 import { EmployeeInfoTitle } from '../EmployeeInfoTitle/EmployeeInfoTitle';
-import { SkillsTitleIcon } from '../ui/iconsComponents/SkillsTitleIcon/SkillsTitleIcon';
-import { BigDownArrowIcon } from '../ui/iconsComponents/BigDownArrowIcon/BigDownArrowIcon';
-import { BigUpArrowIcon } from '../ui/iconsComponents/BigUpArrowIcon/BigUpArrowIcon';
+import { SkillsTitleIcon } from '../../ui/iconsComponents/SkillsTitleIcon/SkillsTitleIcon';
+import { BigDownArrowIcon } from '../../ui/iconsComponents/BigDownArrowIcon/BigDownArrowIcon';
+import { BigUpArrowIcon } from '../../ui/iconsComponents/BigUpArrowIcon/BigUpArrowIcon';
 
 export const SkillsSection = () => {
   const employeeData = useAppSelector((state) => state.employee.employeeData);

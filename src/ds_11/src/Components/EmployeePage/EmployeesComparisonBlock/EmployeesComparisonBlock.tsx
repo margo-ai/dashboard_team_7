@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 
 import './employeesComparisonBlock.scss';
-import { SearchInput } from '../ui/SearchInput/SearchInput';
+import { SearchInput } from '../../ui/SearchInput/SearchInput';
 
-import { useAppDispatch, useAppSelector } from '../../utils/hooks';
+import { useAppDispatch, useAppSelector } from '../../../utils/hooks';
 
-import { setComparisonEmployeeData } from '../../reducers/employeesSlice';
+import { setComparisonEmployeeData } from '../../../reducers/employeesSlice';
 import {
   setProgLang,
   setDbms,
@@ -14,14 +14,14 @@ import {
   setProgram,
   setSwT,
   setTool
-} from '../../reducers/comparisonFiltersSlice';
+} from '../../../reducers/comparisonFiltersSlice';
 
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, Legend, ResponsiveContainer } from 'recharts';
-import { SelectFiltersBlock } from '../SelectFiltersBlock/SelectFiltersBlock';
-import { SelectFilters } from '../SelectFilters/SelectFilters';
-import { getSelectOptionsFromSkillsData, getSortOfCurrentSkill, sortSkillsArray } from '../../utils/helpers';
-import { setComparisonEmployeeSkills } from '../../reducers/skillsSlice';
-import { ResetFiltersButton } from '../ResetFiltersButton/ResetFiltersButton';
+import { SelectFiltersBlock } from '../../SelectFiltersBlock/SelectFiltersBlock';
+import { SelectFilters } from '../../SelectFilters/SelectFilters';
+import { getSelectOptionsFromSkillsData, getSortOfCurrentSkill, sortSkillsArray } from '../../../utils/helpers';
+import { setComparisonEmployeeSkills } from '../../../reducers/skillsSlice';
+import { ResetFiltersButton } from '../../ui/ResetFiltersButton/ResetFiltersButton';
 
 export const EmployeesComparisonBlock = () => {
   const dispatch = useAppDispatch();
@@ -198,7 +198,7 @@ export const EmployeesComparisonBlock = () => {
     secondEmployeeSkillsData
   ]);
 
-  const handleButton = () => {
+  const handleResetButton = () => {
     dispatch(setProgLang('Языки программирования'));
     dispatch(setDbms('Базы данных'));
     dispatch(setSwT('Типы систем'));
@@ -296,7 +296,7 @@ export const EmployeesComparisonBlock = () => {
               )}
             </div>
           ) : null}
-          <ResetFiltersButton resetFunc={handleButton} />
+          <ResetFiltersButton resetFunc={handleResetButton} />
         </div>
       </div>
     </div>

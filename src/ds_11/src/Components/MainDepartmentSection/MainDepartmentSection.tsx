@@ -1,14 +1,14 @@
 import React from 'react';
 
-import './mainDepartmentBlock.scss';
+import './mainDepartmentSection.scss';
 import { InfoBlock } from '../InfoBlock/InfoBlock';
 import { SkillsBarChart } from '../SkillsBarChart/SkillsBarChart';
 
-export const MainDepartmentBlock = () => {
+export const MainDepartmentSection = () => {
   return (
-    <div className="mainDepartmentBlock">
+    <section className="mainDepartmentBlock">
       <InfoBlock />
       <SkillsBarChart />
-    </div>
+    </section>
   );
 };

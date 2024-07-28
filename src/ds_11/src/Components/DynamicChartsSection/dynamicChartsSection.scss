@@ -1,0 +1,24 @@
+@import '../../../../vars.scss';
+
+.dynamicGraphicsSection {
+  background-image: $backgroundGradient;
+  border-radius: 60px;
+  margin-top: 5px;
+
+  padding: 0 54px 0 40px;
+}
+
+.skillsUpChart {
+  .title {
+    font-size: 18px;
+    font-weight: 800;
+  }
+}
+
+.recharts-text.recharts-label {
+  tspan {
+    fill: #fff;
+    font-size: 12px;
+    font-weight: 600;
+  }
+}

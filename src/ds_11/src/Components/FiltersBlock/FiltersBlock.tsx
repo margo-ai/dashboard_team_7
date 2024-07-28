@@ -1,27 +1,23 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import './filtersBlock.scss';
 import { PeriodFilter } from '../PeriodFilter/PeriodFilter';
 import { SeniorityFilter } from '../SeniorityFilter/SeniorityFilter';
 import { SelectFilters } from '../SelectFilters/SelectFilters';
 import { SelectFiltersBlock } from '../SelectFiltersBlock/SelectFiltersBlock';
-import { ResetFiltersButton } from '../ResetFiltersButton/ResetFiltersButton';
+import { ResetFiltersButton } from '../ui/ResetFiltersButton/ResetFiltersButton';
 
 import { useAppDispatch, useAppSelector } from '../../utils/hooks';
 
-import { setPositionFilter, setFrcFilter, setSkillsTypeFilter } from '../../reducers/filtersReducer';
+import { setYearFilter, setFrcFilter, setSkillsTypeFilter } from '../../reducers/filtersReducer';
 
 export const FiltersBlock = () => {
-  const position = useAppSelector((state) => state.filters.position);
+  const [year, setYear] = useState(new Date('2022-01-01'));
+
   const department = useAppSelector((state) => state.filters.frc);
   const skillsType = useAppSelector((state) => state.filters.skillsType);
 
-  const positions = [
-    { name: 'Все должности', value: 'all' },
-    { name: 'Должность1', value: 'first' },
-    { name: 'Должность2', value: 'second' },
-    { name: 'Должность3', value: 'third' }
-  ];
+  const dispatch = useAppDispatch();
 
   const departments = [
     { name: 'Все подразделения', value: 'all' },
@@ -41,16 +37,20 @@ export const FiltersBlock = () => {
   //   console.log({ position }, { department }, { skillsType });
   // }, [position, department, skillsType]);
 
+  const handleResetButton = () => {
+    dispatch(setYearFilter(2022));
+    setYear(new Date('2022-01-01'));
+  };
+
   return (
     <div className="filtersBlock">
-      <PeriodFilter />
+      <PeriodFilter year={year} setYear={setYear} />
       <SeniorityFilter />
       <SelectFiltersBlock>
-        <SelectFilters options={positions} setSelectedFilter={setPositionFilter} />
         <SelectFilters options={departments} setSelectedFilter={setFrcFilter} />
         <SelectFilters options={skillsTypes} setSelectedFilter={setSkillsTypeFilter} />
       </SelectFiltersBlock>
-      <ResetFiltersButton />
+      <ResetFiltersButton resetFunc={handleResetButton} />
     </div>
   );
 };

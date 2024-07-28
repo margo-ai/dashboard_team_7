@@ -1,30 +1,39 @@
 import React, { useEffect, useState } from 'react';
 import { Calendar } from 'primereact/calendar';
-import { addLocale } from 'primereact/api';
-import { localeForCalendar } from '../../utils/constants';
+
+import { minMaxDatesForCalendar } from '../../utils/constants';
 
 import './periodFilter.scss';
 
-export const PeriodFilter = () => {
-  addLocale('ru', localeForCalendar);
+import { setYearFilter } from '../../reducers/filtersReducer';
+import { useAppDispatch, useAppSelector } from '../../utils/hooks';
 
-  const [dates, setDates] = useState([new Date('01-01-2005'), new Date('12-31-2005')]);
-  // useEffect(() => {
-  //   console.log(dates);
-  // }, [dates]);
+type Props = {
+  year: Date;
+  setYear;
+};
+
+export const PeriodFilter = ({ year, setYear }: Props) => {
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    console.log({ year: year.getFullYear() });
+    dispatch(setYearFilter(year.getFullYear()));
+  }, [year]);
 
   return (
     <div className="periodFilter">
       <div className="periodFilter__title">Временной период</div>
       <div className="periodFilter__input">
         <Calendar
-          value={dates}
-          selectionMode="range"
+          value={year}
           readOnlyInput
           hideOnRangeSelection
-          onChange={(e) => setDates(e.value)}
-          locale={'ru'}
-          view="month"
+          onChange={(e) => setYear(e.value)}
+          view="year"
+          dateFormat="yy"
+          minDate={minMaxDatesForCalendar[0]}
+          maxDate={minMaxDatesForCalendar[1]}
         />
       </div>
     </div>

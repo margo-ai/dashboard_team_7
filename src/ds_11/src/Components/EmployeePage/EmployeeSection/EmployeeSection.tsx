@@ -2,16 +2,16 @@ import React, { useEffect } from 'react';
 import { KoobDataService } from 'bi-internal/services';
 const { koobDataRequest3 } = KoobDataService;
 
-import { SearchInput } from '../ui/SearchInput/SearchInput';
+import { SearchInput } from '../../ui/SearchInput/SearchInput';
 import { EmployeeInfoTitle } from '../EmployeeInfoTitle/EmployeeInfoTitle';
-import { EmployeeTitleIcon } from '../ui/iconsComponents/EmployeeTitleIcon/EmployeeTitleIcon';
+import { EmployeeTitleIcon } from '../../ui/iconsComponents/EmployeeTitleIcon/EmployeeTitleIcon';
 
-import { useAppDispatch, useAppSelector } from '../../utils/hooks';
+import { useAppDispatch, useAppSelector } from '../../../utils/hooks';
 
 import './employeeSection.scss';
-import { setComparisonEmployeeData, setEmployeeData } from '../../reducers/employeesSlice';
-import { sortSkillsArray } from '../../utils/helpers';
-import { setComparisonEmployeeSkills, setEmployeeSkills } from '../../reducers/skillsSlice';
+import { setComparisonEmployeeData, setEmployeeData } from '../../../reducers/employeesSlice';
+import { sortSkillsArray } from '../../../utils/helpers';
+import { setComparisonEmployeeSkills, setEmployeeSkills } from '../../../reducers/skillsSlice';
 
 import {
   setProgLang,
@@ -21,7 +21,7 @@ import {
   setProgram,
   setSwT,
   setTool
-} from '../../reducers/comparisonFiltersSlice';
+} from '../../../reducers/comparisonFiltersSlice';
 
 export const EmployeeSection = () => {
   const dispatch = useAppDispatch();

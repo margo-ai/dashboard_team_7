@@ -1,10 +1,10 @@
 import React from 'react';
 
-import { EmployeeSection } from '../../Components/EmployeeSection/EmployeeSection';
+import { EmployeeSection } from '../../Components/EmployeePage/EmployeeSection/EmployeeSection';
 
 import './emloyeePage.scss';
-import { ComparisonSection } from '../../Components/ComparisonSection/ComparisonSection';
-import { SkillsSection } from '../../Components/SkillsSection/SkillsSection';
+import { ComparisonSection } from '../../Components/EmployeePage/ComparisonSection/ComparisonSection';
+import { SkillsSection } from '../../Components/EmployeePage/SkillsSection/SkillsSection';
 import { useAppSelector } from '../../utils/hooks';
 
 export const EmployeePage = () => {
