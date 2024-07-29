@@ -91,7 +91,6 @@ export const getSelectOptionsFromSkillsData = (skillsData: TSkillsData) => {
       }
     }
   }
-  console.log({ lalala: skillOptions['Языки программирования'] });
 
   const progLangOptions = skillOptions['Языки программирования'];
   const dbmsOptions = skillOptions['Базы данных'];
@@ -136,4 +135,77 @@ export const getSortOfCurrentSkill = (
   }
 
   return sort;
+};
+
+const fillMissingQuarters = (data) => {
+  const quarters = ['1', '2', '3', '4'];
+  const result = [];
+
+  quarters.forEach((quarter) => {
+    const existingData = data.find((item) => item.quarter === quarter);
+
+    if (existingData) {
+      result.push(existingData);
+    } else {
+      result.push({ quarter, employee_id: 0 });
+    }
+  });
+
+  return result;
+};
+
+type TSkillsUpData = { quarter: string; employee_id: number }[];
+
+export const transformSkillsUpChartData = (withCertEmployees: TSkillsUpData, withoutCartEmployees: TSkillsUpData) => {
+  const totalEmployeesCount = [0, 0, 0, 0];
+  const haveCertCount = [0, 0, 0, 0];
+  const haventCertCount = [0, 0, 0, 0];
+  const haveCertResult = [];
+  const haventCertResult = [];
+
+  withCertEmployees.sort((a, b) => {
+    const quarterA = Number(a.quarter);
+    const quarterB = Number(b.quarter);
+    return quarterA - quarterB;
+  });
+
+  withoutCartEmployees.sort((a, b) => {
+    const quarterA = Number(a.quarter);
+    const quarterB = Number(b.quarter);
+    return quarterA - quarterB;
+  });
+
+  const updatedHaveCertEmployees = fillMissingQuarters(withCertEmployees);
+  const updatedHaventCertEmployees = fillMissingQuarters(withoutCartEmployees);
+
+  for (let i = 0; i < updatedHaveCertEmployees.length; i++) {
+    haveCertCount[i] = updatedHaveCertEmployees[i].employee_id;
+  }
+
+  for (let i = 0; i < updatedHaventCertEmployees.length; i++) {
+    haventCertCount[i] = updatedHaventCertEmployees[i].employee_id;
+  }
+
+  for (let i = 0; i < 4; i++) {
+    totalEmployeesCount[i] = haveCertCount[i] + haventCertCount[i];
+  }
+
+  for (let i = 0; i < 4; i++) {
+    if (totalEmployeesCount[i] === 0) {
+      haveCertResult.push({ name: `${i + 1} квартал`, haveCert: 0 });
+      haventCertResult.push(0);
+    } else {
+      haveCertResult.push({
+        name: `${i + 1} квартал`,
+        haveCert: Number(((haveCertCount[i] / totalEmployeesCount[i]) * 100).toFixed(2))
+      });
+      haventCertResult.push(Number(((haventCertCount[i] / totalEmployeesCount[i]) * 100).toFixed(2)));
+    }
+  }
+
+  const result = haveCertResult.map((item, index) => {
+    return { ...item, haventCert: haventCertResult[index] };
+  });
+
+  return result;
 };

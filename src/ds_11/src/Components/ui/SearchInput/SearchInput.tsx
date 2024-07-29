@@ -12,6 +12,8 @@ import { setEmployeeSkills, setComparisonEmployeeSkills } from '../../../reducer
 import { ActionCreatorWithPayload } from '@reduxjs/toolkit';
 import { sortSkillsArray } from '../../../utils/helpers';
 
+import { useKoobRequest } from '../../../utils/hooks';
+
 const changeFirstLetterToUpperCase = (str: string) => {
   return str[0].toUpperCase() + str.slice(1);
 };

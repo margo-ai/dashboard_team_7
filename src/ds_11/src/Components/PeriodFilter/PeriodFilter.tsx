@@ -17,7 +17,6 @@ export const PeriodFilter = ({ year, setYear }: Props) => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    console.log({ year: year.getFullYear() });
     dispatch(setYearFilter(year.getFullYear()));
   }, [year]);
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import './departmentPage.scss';
 import { FiltersBlock } from '../../Components/FiltersBlock/FiltersBlock';
@@ -11,7 +11,7 @@ export const DepartmentPage = () => {
       <h1 style={{ display: 'none' }}>Страница департамента</h1>
       <FiltersBlock />
       <MainDepartmentSection />
-      {/* <DynamicChartsSection /> */}
+      <DynamicChartsSection />
     </main>
   );
 };

@@ -6,6 +6,8 @@ import { ResponsiveContainer, BarChart, CartesianGrid, XAxis, YAxis, Tooltip, Ba
 
 import './dynamicChartsSection.scss';
 import { CustomTooltip } from '../ui/CustomTooltip/CustomTooltip';
+import { useAppSelector } from '../../utils/hooks';
+import { transformSkillsUpChartData } from '../../utils/helpers';
 
 type TSkillsUpEmployees = { quarter: string; employee_id: number }[];
 
@@ -15,12 +17,19 @@ export const DynamicChartsSection = () => {
   const [haventCertEmployees, setHaventCertEmployees] = useState<TSkillsUpEmployees>([]);
   const [skillUpChartData, setSkillUpChartData] = useState([]);
 
+  const year = useAppSelector((state) => state.filters.year);
+
   useEffect(() => {
     koobDataRequest3(
       'etl_db_7.department_koob_1',
       ['quarter'],
       ['count(employee_id)'],
-      { y: ['=', '2023'], cer_flag: ['=', 'true'] },
+      {
+        y: ['=', year],
+        cer_flag: ['=', 1],
+        data_type: ['=', 'актуальные'],
+        '': ['=', ['column', 'grade_name'], 'Middle']
+      },
       { schema_name: 'ds_11' },
       'ourRequest'
     ).then((res: TSkillsUpEmployees) => {
@@ -32,82 +41,31 @@ export const DynamicChartsSection = () => {
       'etl_db_7.department_koob_1',
       ['quarter'],
       ['count(employee_id)'],
-      { y: ['=', '2023'], cer_flag: ['=', 'false'] },
+      { y: ['=', year], cer_flag: ['=', 0], data_type: ['=', 'актуальные'] },
       { schema_name: 'ds_11' },
       'ourRequest'
     ).then((res2: TSkillsUpEmployees) => {
       console.log({ res2 });
       setHaventCertEmployees(res2);
     });
-  }, []);
+  }, [year]);
 
   useEffect(() => {
-    if (haveCertEmployees.length !== 0 && haventCertEmployees.length !== 0) {
-      console.log({ haveCertEmployees, haventCertEmployees });
+    const result = transformSkillsUpChartData(haveCertEmployees, haventCertEmployees);
+    console.log({ result });
 
-      const employeesNumber = [...haveCertEmployees, ...haventCertEmployees].reduce(
-        (acc, curr) => acc + curr.employee_id,
-        0
-      );
-      console.log({ employeesNumber });
-
-      const data = haveCertEmployees.map((item) => {
-        return { name: item.quarter, haveCert: Number(((item.employee_id / employeesNumber) * 100).toFixed(2)) };
-      });
-      console.log({ data });
-
-      const result = data.map((item) => {
-        const foundItem = haventCertEmployees.find((el) => el.quarter === item.name);
-        return { ...item, haventCert: Number(((foundItem.employee_id / employeesNumber) * 100).toFixed(2)) };
-      });
-      console.log({ result });
-
-      result.sort((a, b) => {
-        const quarterA = Number(a.name.slice(0, 1));
-        const quarterB = Number(b.name.slice(0, 1));
-        return quarterA - quarterB;
-      });
-
-      setSkillUpChartData(result);
-    }
+    setSkillUpChartData(result);
   }, [haveCertEmployees, haventCertEmployees]);
 
-  // const dataa = [
-  //   {
-  //     name: '1 квартал',
-  //     haveCert: 0.1,
-  //     haventCert: 0.15
-  //   },
-  //   {
-  //     name: '2 квартал',
-  //     haveCert: 0.22,
-  //     haventCert: 0.05
-  //   },
-  //   {
-  //     name: '3 квартал',
-  //     haveCert: 0.1,
-  //     haventCert: 0.18
-  //   },
-  //   {
-  //     name: '4 квартал',
-  //     haveCert: 0.1,
-  //     haventCert: 0.5
-  //   }
-  // ];
-
   const percentageFormatter = (value) => {
-    return `${value}%`; // Преобразуем дробное значение в процент
+    return `${value}%`;
   };
-
-  // const CustomLabel = () => {
-  //   <div>Процент повысивших</div>;
-  // };
 
   return (
     <div className="dynamicGraphicsSection">
       <div className="skillsUpChart">
         <h2 className="skillsUpChart__title">Влияние прохождения курсов на частоту улучшения навыков</h2>
-        <ResponsiveContainer width={650} height={200}>
+        <ResponsiveContainer width="50%" height={200}>
           <BarChart data={skillUpChartData}>
             <CartesianGrid vertical={false} strokeDasharray="5" stroke="#313359" />
             <XAxis
@@ -124,8 +82,8 @@ export const DynamicChartsSection = () => {
               axisLine={false}
               tickLine={false}
             />
-            {/* <Tooltip formatter={(value) => [`${value}%`, 'Процент']} /> */}
-            <Tooltip content={<CustomTooltip />} />
+            <Tooltip formatter={(value) => [`${value}%`, 'Процент']} />
+            {/* <Tooltip content={<CustomTooltip />} /> */}
             <Bar dataKey="haventCert" fill="#31D9FE" width={30} />
             <Bar dataKey="haveCert" fill="#582CFF" width={30} />
           </BarChart>

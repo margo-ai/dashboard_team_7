@@ -33,6 +33,8 @@ export const EmployeeSection = () => {
   }, [data]);
 
   const setDataFunc = (mappedData) => {
+    // localStorage.setItem('employee', mappedData[0].name);
+
     dispatch(setEmployeeData(mappedData));
     const sortedSkills = sortSkillsArray(mappedData);
     dispatch(setEmployeeSkills(sortedSkills));
