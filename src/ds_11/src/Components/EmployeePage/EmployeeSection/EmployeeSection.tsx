@@ -54,7 +54,7 @@ export const EmployeeSection = () => {
 
   return (
     <section className="employeeSection">
-      <SearchInput setDataFunc={setDataFunc} isMainEmployee handleClearFunc={handleClearFunc} />
+      <SearchInput setDataFunc={setDataFunc} handleClearFunc={handleClearFunc} />
       <div className="employeeSection__info">
         <EmployeeInfoTitle title="Сотрудник" width={271}>
           <EmployeeTitleIcon />

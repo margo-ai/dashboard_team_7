@@ -5,13 +5,12 @@ import { CertificateIcon } from '../ui/iconsComponents/CertificateIcon/Certifica
 
 type Props = {
   count: number;
-  percent: number;
+  percent: string;
   title: string;
   children: React.ReactNode;
-  isPercentPlus?: boolean;
 };
 
-export const CertificatesStatistickBlock = ({ count, percent, title, children, isPercentPlus }: Props) => {
+export const CertificatesStatistickBlock = ({ count, percent, title, children }: Props) => {
   return (
     <div className="certificatesStatistickBlock">
       <div className="certificatesStatistickBlock__info">
@@ -20,9 +19,9 @@ export const CertificatesStatistickBlock = ({ count, percent, title, children, i
           <div className="certificatesStatistickBlock__count">{count}</div>
           <div
             className={`${
-              isPercentPlus
-                ? 'certificatesStatistickBlock__percent percent-plus'
-                : 'certificatesStatistickBlock__percent percent-minus'
+              percent[0] === '-'
+                ? 'certificatesStatistickBlock__percent percent-minus'
+                : 'certificatesStatistickBlock__percent percent-plus'
             }`}
           >
             {percent}%

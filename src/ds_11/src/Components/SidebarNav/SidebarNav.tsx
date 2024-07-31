@@ -5,11 +5,22 @@ import { DepartmentIcon } from '../ui/iconsComponents/DepartmentIcon/DepartmentI
 import { EmployeeIcon } from '../ui/iconsComponents/EmployeeIcon/EmployeeIcon';
 import { navigateToDboard } from '../../utils/helpers';
 
+import { setEmployeeData, setComparisonEmployeeData } from '../../reducers/employeesSlice';
+import { useAppDispatch } from '../../utils/hooks';
+
 import './sidebarNav.scss';
 
 export const SidebarNav = () => {
   const stateCharts = UrlState.getModel();
   const { dboard } = stateCharts;
+
+  const dispatch = useAppDispatch();
+
+  const handleClickOnFirstDboard = () => {
+    navigateToDboard('1');
+    dispatch(setEmployeeData([]));
+    dispatch(setComparisonEmployeeData([]));
+  };
 
   return (
     <nav className="sidebarNav">
@@ -17,7 +28,7 @@ export const SidebarNav = () => {
         <li>
           <button
             style={{ borderLeft: `${dboard === '1' ? '7px solid #05C696' : ''}` }}
-            onClick={() => navigateToDboard('1')}
+            onClick={handleClickOnFirstDboard}
           >
             <DepartmentIcon />
           </button>

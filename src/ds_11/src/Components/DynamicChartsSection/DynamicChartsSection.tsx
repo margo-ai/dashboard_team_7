@@ -178,13 +178,13 @@ export const DynamicChartsSection = () => {
           </LineChart>
         </ResponsiveContainer>
       </div>
-      <div className="dynamicGraphicsSection__filterAndLabel">
+      <div className="dynamicGraphicsSection__filterAndLegend">
         {gradeOptions.length !== 0 && (
           <SelectFiltersBlock>
             <SelectFilters options={gradeOptions} setSelectedFilter={setGradeFilter} selectedFilter={currentGrade} />
           </SelectFiltersBlock>
         )}
-        <div className="dynamicGraphicsSection__label">
+        <div className="dynamicGraphicsSection__legend">
           <span className="dynamicGraphicsSection__haveCertSpan">получали</span> и
           <span className="dynamicGraphicsSection__haventCertSpan"> не получали</span> сертификаты в
           <span style={{ textDecoration: 'underline' }}> прошлом году</span>

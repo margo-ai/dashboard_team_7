@@ -100,7 +100,7 @@ export const SkillsBarChart = () => {
               tickLine={false}
             />
             <YAxis
-              label={{ value: 'Сотрудники', angle: -90, position: 'insideBottomLeft' }}
+              label={{ value: 'Сотрудники', angle: -90, position: 'insideLeft' }}
               domain={[0, 'auto']}
               tick={{ fill: '#fff', fontSize: '12px' }}
               axisLine={false}

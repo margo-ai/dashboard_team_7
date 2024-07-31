@@ -8,6 +8,18 @@
   display: flex;
   gap: 19px;
 
+  @media (max-width: 1420px) {
+    flex-direction: column;
+  }
+
+  &__chart {
+    width: 86%;
+
+    @media (max-width: 1420px) {
+      width: 100%;
+    }
+  }
+
   h2 {
     font-size: 28px;
     font-weight: 800;
@@ -19,12 +31,22 @@
     background-color: #252f5f;
     border-radius: 8px;
     height: fit-content;
+
+    @media (max-width: 1420px) {
+      width: fit-content;
+      height: auto;
+      padding: 15px 10px;
+    }
   }
 
   &__legendList {
     display: flex;
     flex-direction: column;
     gap: 20px;
+
+    @media (max-width: 1420px) {
+      flex-direction: row;
+    }
   }
 
   &__legendItem {
@@ -34,5 +56,19 @@
     width: 91px;
     padding: 4px 0 5px 0;
     text-align: center;
+
+    @media (max-width: 1420px) {
+      width: 100px;
+      padding: 5px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+
+  .recharts-text.recharts-label {
+    tspan {
+      font-size: 16px;
+    }
   }
 }
