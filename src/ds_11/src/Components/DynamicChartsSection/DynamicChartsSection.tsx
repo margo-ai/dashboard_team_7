@@ -19,7 +19,7 @@ import {
 import './dynamicChartsSection.scss';
 import { CustomTooltip } from '../ui/CustomTooltip/CustomTooltip';
 import { useAppSelector } from '../../utils/hooks';
-import { joinAvgSkills, transformSkillsUpChartData } from '../../utils/helpers';
+import { createRequestFilters, joinAvgSkills, transformSkillsUpChartData } from '../../utils/helpers';
 import { TAvgSkills, TSkillsUpEmployees } from '../../utils/types';
 import { SelectFiltersBlock } from '../SelectFiltersBlock/SelectFiltersBlock';
 import { SelectFilters } from '../SelectFilters/SelectFilters';
@@ -34,9 +34,11 @@ export const DynamicChartsSection = () => {
   const [avgSkillsWithoutCert, setAvgSkillsWithoutCert] = useState<TAvgSkills>([]);
   const [avgSkillsChartData, setAvgSkillsChartData] = useState([]);
 
-  const currentGradeFilter = useAppSelector((state) => state.currentFilters.grade);
   const gradeOptions = useAppSelector((state) => state.filtersOptions.grade);
-  const year = useAppSelector((state) => state.currentFilters.year);
+  const currentYear = useAppSelector((state) => state.currentFilters.year);
+  const currentDepartment = useAppSelector((state) => state.currentFilters.department);
+  const currentSkillType = useAppSelector((state) => state.currentFilters.skillType);
+  const currentGrade = useAppSelector((state) => state.currentFilters.grade);
 
   useEffect(() => {
     koobDataRequest3(
@@ -44,11 +46,10 @@ export const DynamicChartsSection = () => {
       ['quarter'],
       ['count(employee_id)'],
       {
-        y: ['=', year],
+        y: ['=', currentYear],
         cer_flag: ['=', 1],
         data_type: ['=', 'актуальные'],
-        // '': ['=', ['column', 'grade_name'], 'Middle']
-        '': ''
+        '': createRequestFilters({ department: currentDepartment, skillType: currentSkillType, grade: currentGrade })
       },
       { schema_name: 'ds_11' },
       'ourRequest'
@@ -60,13 +61,18 @@ export const DynamicChartsSection = () => {
       'etl_db_7.department_koob_1',
       ['quarter'],
       ['count(employee_id)'],
-      { y: ['=', year], cer_flag: ['=', 0], data_type: ['=', 'актуальные'] },
+      {
+        y: ['=', currentYear],
+        cer_flag: ['=', 0],
+        data_type: ['=', 'актуальные'],
+        '': createRequestFilters({ department: currentDepartment, skillType: currentSkillType, grade: currentGrade })
+      },
       { schema_name: 'ds_11' },
       'ourRequest'
     ).then((res2: TSkillsUpEmployees) => {
       setHaventCertEmployees(res2);
     });
-  }, [year]);
+  }, [currentYear, currentDepartment, currentSkillType, currentGrade]);
 
   useEffect(() => {
     const result = transformSkillsUpChartData(haveCertEmployees, haventCertEmployees);
@@ -84,10 +90,10 @@ export const DynamicChartsSection = () => {
       ['quarter', 'count(distinct(employee_id))', 'count(skill_id)'],
       [],
       {
-        y: ['=', year],
+        y: ['=', currentYear],
         cer_flag: ['=', 1],
         rank_grade: ['=', 1],
-        '': ''
+        '': createRequestFilters({ department: currentDepartment, skillType: currentSkillType, grade: currentGrade })
       },
       { schema_name: 'ds_11' },
       'ourRequest'
@@ -99,13 +105,18 @@ export const DynamicChartsSection = () => {
       'etl_db_7.department_koob_1',
       ['quarter', 'count(distinct(employee_id))', 'count(skill_id)'],
       [],
-      { y: ['=', year], cer_flag: ['=', 0], rank_grade: ['=', 1] },
+      {
+        y: ['=', currentYear],
+        cer_flag: ['=', 0],
+        rank_grade: ['=', 1],
+        '': createRequestFilters({ department: currentDepartment, skillType: currentSkillType, grade: currentGrade })
+      },
       { schema_name: 'ds_11' },
       'ourRequest'
     ).then((res) => {
       setAvgSkillsWithoutCert(res);
     });
-  }, [year]);
+  }, [currentYear, currentDepartment, currentSkillType, currentGrade]);
 
   useEffect(() => {
     const joinedAvgSkillsData = joinAvgSkills(avgSkillsWithCert, avgSkillsWithoutCert);
@@ -170,11 +181,7 @@ export const DynamicChartsSection = () => {
       <div className="dynamicGraphicsSection__filterAndLabel">
         {gradeOptions.length !== 0 && (
           <SelectFiltersBlock>
-            <SelectFilters
-              options={gradeOptions}
-              setSelectedFilter={setGradeFilter}
-              selectedFilter={currentGradeFilter}
-            />
+            <SelectFilters options={gradeOptions} setSelectedFilter={setGradeFilter} selectedFilter={currentGrade} />
           </SelectFiltersBlock>
         )}
         <div className="dynamicGraphicsSection__label">

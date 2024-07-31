@@ -346,3 +346,38 @@ export const groupLowestSkillsData = (data, skillIds) => {
 
   return chartData;
 };
+
+type TRequestFilters = { department: string; skillType: string; grade?: string };
+
+export const createRequestFilters = ({ department, skillType, grade }: TRequestFilters) => {
+  const filtersArray: (string | string[])[] = ['and'];
+
+  if (!!grade) {
+    if (department === 'Все подразделения' && skillType === 'Все типы навыков' && grade === 'Все грейды') {
+      return '';
+    } else {
+      if (department !== 'Все подразделения') {
+        filtersArray.push(['=', ['column', 'department'], department]);
+      }
+      if (skillType !== 'Все типы навыков') {
+        filtersArray.push(['=', ['column', 'skill_type'], skillType]);
+      }
+      if (grade !== 'Все грейды') {
+        filtersArray.push(['=', ['column', 'grade_name'], grade]);
+      }
+    }
+  } else {
+    if (department === 'Все подразделения' && skillType === 'Все типы навыков') {
+      return '';
+    } else {
+      if (department !== 'Все подразделения') {
+        filtersArray.push(['=', ['column', 'department'], department]);
+      }
+      if (skillType !== 'Все типы навыков') {
+        filtersArray.push(['=', ['column', 'skill_type'], skillType]);
+      }
+    }
+  }
+
+  return filtersArray;
+};

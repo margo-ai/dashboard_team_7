@@ -5,12 +5,15 @@ const { koobDataRequest3 } = KoobDataService;
 import './skillsBarChart.scss';
 
 import { useAppSelector } from '../../utils/hooks';
-import { groupLowestSkillsData } from '../../utils/helpers';
+import { createRequestFilters, groupLowestSkillsData } from '../../utils/helpers';
 import { CartesianGrid, ResponsiveContainer, XAxis, YAxis, BarChart, Bar, Tooltip } from 'recharts';
 import { barChartColors } from '../../utils/constants';
 
 export const SkillsBarChart = () => {
-  const year = useAppSelector((state) => state.currentFilters.year);
+  const currentYear = useAppSelector((state) => state.currentFilters.year);
+  const currentDepartment = useAppSelector((state) => state.currentFilters.department);
+  const currentSkillType = useAppSelector((state) => state.currentFilters.skillType);
+  const currentGrade = useAppSelector((state) => state.currentFilters.grade);
 
   const [skillIds, setSkillIds] = useState([]);
   const [skillsBarChartData, setSkillsBarChartData] = useState([]);
@@ -21,9 +24,10 @@ export const SkillsBarChart = () => {
       ['skill_type', 'skill_id'],
       ['avg(sort)'],
       {
-        y: ['=', year],
+        y: ['=', currentYear],
         rank_grade: ['=', 1],
-        quarter: ['=', '4']
+        quarter: ['=', '4'],
+        '': createRequestFilters({ department: currentDepartment, skillType: currentSkillType })
       },
       { schema_name: 'ds_11' },
       'ourRequest'
@@ -38,7 +42,7 @@ export const SkillsBarChart = () => {
       const skillIds = skillsArray.slice(0, 5).map((item) => item.skill_id);
       setSkillIds(skillIds);
     });
-  }, [year]);
+  }, [currentYear, currentDepartment, currentSkillType, currentGrade]);
 
   useEffect(() => {
     koobDataRequest3(
@@ -46,7 +50,7 @@ export const SkillsBarChart = () => {
       ['skill_id', 'skill_name', 'grade_name', 'count(distinct(employee_id))'],
       ['avg(sort)'],
       {
-        y: ['=', year],
+        y: ['=', currentYear],
         rank_grade: ['=', 1],
         quarter: ['=', '4'],
         skill_id: [
@@ -78,7 +82,7 @@ export const SkillsBarChart = () => {
 
       const arrayWithAllGrades = fillMissingGrades(lowestSkillsData);
 
-      setSkillsBarChartData(lowestSkillsData);
+      setSkillsBarChartData(arrayWithAllGrades);
     });
   }, [skillIds]);
 

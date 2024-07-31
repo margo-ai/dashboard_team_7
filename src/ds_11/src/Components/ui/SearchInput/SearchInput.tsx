@@ -7,12 +7,6 @@ import { useAppDispatch, useAppSelector } from '../../../utils/hooks';
 import { ResetCrossIcon } from '../iconsComponents/ResetCrossIcon/ResetCrossIcon';
 
 import './searchInput.scss';
-import { setEmployeeData } from '../../../reducers/employeesSlice';
-import { setEmployeeSkills, setComparisonEmployeeSkills } from '../../../reducers/skillsSlice';
-import { ActionCreatorWithPayload } from '@reduxjs/toolkit';
-import { sortSkillsArray } from '../../../utils/helpers';
-
-import { useKoobRequest } from '../../../utils/hooks';
 
 const changeFirstLetterToUpperCase = (str: string) => {
   return str[0].toUpperCase() + str.slice(1);
@@ -20,7 +14,6 @@ const changeFirstLetterToUpperCase = (str: string) => {
 
 type Props = {
   setDataFunc: (mappedData: any) => void;
-  isMainEmployee?: boolean;
   handleClearFunc: (setSearchTerm: React.Dispatch<React.SetStateAction<string>>) => void;
 };
 
