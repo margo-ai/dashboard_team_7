@@ -1,0 +1,38 @@
+@import '../../../../vars.scss';
+
+.skillsBarChart {
+  width: 100%;
+  border-radius: 20px;
+  background-image: $barChartBackgroundGradient;
+  padding: 55px 12px 5px 24px;
+  display: flex;
+  gap: 19px;
+
+  h2 {
+    font-size: 28px;
+    font-weight: 800;
+  }
+
+  &__legend {
+    width: 111px;
+    padding: 28px 10px 24px 10px;
+    background-color: #252f5f;
+    border-radius: 8px;
+    height: fit-content;
+  }
+
+  &__legendList {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  &__legendItem {
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 20px;
+    width: 91px;
+    padding: 4px 0 5px 0;
+    text-align: center;
+  }
+}

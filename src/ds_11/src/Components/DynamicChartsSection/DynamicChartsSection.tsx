@@ -2,22 +2,41 @@ import React, { useEffect, useState } from 'react';
 import { KoobDataService } from 'bi-internal/services';
 const { koobDataRequest3 } = KoobDataService;
 
-import { ResponsiveContainer, BarChart, CartesianGrid, XAxis, YAxis, Tooltip, Bar, Legend, Label } from 'recharts';
+import {
+  ResponsiveContainer,
+  BarChart,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Bar,
+  Legend,
+  Label,
+  LineChart,
+  Line
+} from 'recharts';
 
 import './dynamicChartsSection.scss';
 import { CustomTooltip } from '../ui/CustomTooltip/CustomTooltip';
 import { useAppSelector } from '../../utils/hooks';
-import { transformSkillsUpChartData } from '../../utils/helpers';
-
-type TSkillsUpEmployees = { quarter: string; employee_id: number }[];
+import { joinAvgSkills, transformSkillsUpChartData } from '../../utils/helpers';
+import { TAvgSkills, TSkillsUpEmployees } from '../../utils/types';
+import { SelectFiltersBlock } from '../SelectFiltersBlock/SelectFiltersBlock';
+import { SelectFilters } from '../SelectFilters/SelectFilters';
+import { setGradeFilter } from '../../reducers/currentFiltersReducer';
 
 export const DynamicChartsSection = () => {
-  const [allEmployeesNumber, setAllEmployeesNumber] = useState(0);
   const [haveCertEmployees, setHaveCertEmployees] = useState<TSkillsUpEmployees>([]);
   const [haventCertEmployees, setHaventCertEmployees] = useState<TSkillsUpEmployees>([]);
   const [skillUpChartData, setSkillUpChartData] = useState([]);
 
-  const year = useAppSelector((state) => state.filters.year);
+  const [avgSkillsWithCert, setAvgSkillsWithCert] = useState<TAvgSkills>([]);
+  const [avgSkillsWithoutCert, setAvgSkillsWithoutCert] = useState<TAvgSkills>([]);
+  const [avgSkillsChartData, setAvgSkillsChartData] = useState([]);
+
+  const currentGradeFilter = useAppSelector((state) => state.currentFilters.grade);
+  const gradeOptions = useAppSelector((state) => state.filtersOptions.grade);
+  const year = useAppSelector((state) => state.currentFilters.year);
 
   useEffect(() => {
     koobDataRequest3(
@@ -28,12 +47,12 @@ export const DynamicChartsSection = () => {
         y: ['=', year],
         cer_flag: ['=', 1],
         data_type: ['=', 'актуальные'],
-        '': ['=', ['column', 'grade_name'], 'Middle']
+        // '': ['=', ['column', 'grade_name'], 'Middle']
+        '': ''
       },
       { schema_name: 'ds_11' },
       'ourRequest'
     ).then((res: TSkillsUpEmployees) => {
-      console.log({ res });
       setHaveCertEmployees(res);
     });
 
@@ -45,14 +64,12 @@ export const DynamicChartsSection = () => {
       { schema_name: 'ds_11' },
       'ourRequest'
     ).then((res2: TSkillsUpEmployees) => {
-      console.log({ res2 });
       setHaventCertEmployees(res2);
     });
   }, [year]);
 
   useEffect(() => {
     const result = transformSkillsUpChartData(haveCertEmployees, haventCertEmployees);
-    console.log({ result });
 
     setSkillUpChartData(result);
   }, [haveCertEmployees, haventCertEmployees]);
@@ -61,11 +78,45 @@ export const DynamicChartsSection = () => {
     return `${value}%`;
   };
 
+  useEffect(() => {
+    koobDataRequest3(
+      'etl_db_7.department_koob_1',
+      ['quarter', 'count(distinct(employee_id))', 'count(skill_id)'],
+      [],
+      {
+        y: ['=', year],
+        cer_flag: ['=', 1],
+        rank_grade: ['=', 1],
+        '': ''
+      },
+      { schema_name: 'ds_11' },
+      'ourRequest'
+    ).then((res) => {
+      setAvgSkillsWithCert(res);
+    });
+
+    koobDataRequest3(
+      'etl_db_7.department_koob_1',
+      ['quarter', 'count(distinct(employee_id))', 'count(skill_id)'],
+      [],
+      { y: ['=', year], cer_flag: ['=', 0], rank_grade: ['=', 1] },
+      { schema_name: 'ds_11' },
+      'ourRequest'
+    ).then((res) => {
+      setAvgSkillsWithoutCert(res);
+    });
+  }, [year]);
+
+  useEffect(() => {
+    const joinedAvgSkillsData = joinAvgSkills(avgSkillsWithCert, avgSkillsWithoutCert);
+    setAvgSkillsChartData(joinedAvgSkillsData);
+  }, [avgSkillsWithCert, avgSkillsWithoutCert]);
+
   return (
-    <div className="dynamicGraphicsSection">
+    <section className="dynamicGraphicsSection">
       <div className="skillsUpChart">
         <h2 className="skillsUpChart__title">Влияние прохождения курсов на частоту улучшения навыков</h2>
-        <ResponsiveContainer width="50%" height={200}>
+        <ResponsiveContainer width="100%" height={200}>
           <BarChart data={skillUpChartData}>
             <CartesianGrid vertical={false} strokeDasharray="5" stroke="#313359" />
             <XAxis
@@ -84,11 +135,54 @@ export const DynamicChartsSection = () => {
             />
             <Tooltip formatter={(value) => [`${value}%`, 'Процент']} />
             {/* <Tooltip content={<CustomTooltip />} /> */}
-            <Bar dataKey="haventCert" fill="#31D9FE" width={30} />
-            <Bar dataKey="haveCert" fill="#582CFF" width={30} />
+            <Bar dataKey="haventCert" className="haveCert" width={30} />
+            <Bar dataKey="haveCert" className="haventCert" width={30} />
           </BarChart>
         </ResponsiveContainer>
       </div>
-    </div>
+      <div className="avgSkillsChart">
+        <h2 className="avgSkillsChart__title">
+          Влияние прохождения курсов на среднее число навыков сотрудников по грейдам
+        </h2>
+        <ResponsiveContainer width="100%" height={200}>
+          <LineChart data={avgSkillsChartData}>
+            <CartesianGrid vertical={false} strokeDasharray="5" stroke="#313359" />
+            <XAxis
+              dataKey="quarter"
+              tick={{ fill: '#fff', fontSize: '12px', fontWeight: 600 }}
+              axisLine={false}
+              tickLine={false}
+            />
+            <YAxis
+              label={{ value: 'Количество навыков', angle: -90, position: 'insideBottomLeft' }}
+              domain={[0, 'auto']}
+              tick={{ fill: '#fff', fontSize: '12px' }}
+              axisLine={false}
+              tickLine={false}
+            />
+            <Tooltip />
+            {/* <Tooltip content={<CustomTooltip />} /> */}
+            <Line type={'linear'} dataKey="withCert" className="haveCert" strokeWidth={3} dot={false} />
+            <Line type={'linear'} dataKey="withoutCert" className="haventCert" strokeWidth={3} dot={false} />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+      <div className="dynamicGraphicsSection__filterAndLabel">
+        {gradeOptions.length !== 0 && (
+          <SelectFiltersBlock>
+            <SelectFilters
+              options={gradeOptions}
+              setSelectedFilter={setGradeFilter}
+              selectedFilter={currentGradeFilter}
+            />
+          </SelectFiltersBlock>
+        )}
+        <div className="dynamicGraphicsSection__label">
+          <span className="dynamicGraphicsSection__haveCertSpan">получали</span> и
+          <span className="dynamicGraphicsSection__haventCertSpan"> не получали</span> сертификаты в
+          <span style={{ textDecoration: 'underline' }}> прошлом году</span>
+        </div>
+      </div>
+    </section>
   );
 };

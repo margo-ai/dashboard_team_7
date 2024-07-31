@@ -21,17 +21,14 @@ export const SelectFilters = ({ options, setSelectedFilter, selectedFilter }: Pr
   const [selectedOption, setSelectedOption] = useState(options[0].value);
 
   useEffect(() => {
-    // console.log({ selectedOption, selectedFilter });
     if (selectedFilter === options[0].value) {
       setSelectedOption(options[0].value);
     }
   }, [selectedFilter]);
 
   useEffect(() => {
-    // console.log({ selectedOption });
     dispatch(setSelectedFilter(selectedOption));
   }, [selectedOption]);
-  // console.log({ placeholder });
 
   return (
     <div className="selectFilter">

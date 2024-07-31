@@ -5,7 +5,7 @@ import { minMaxDatesForCalendar } from '../../utils/constants';
 
 import './periodFilter.scss';
 
-import { setYearFilter } from '../../reducers/filtersReducer';
+import { setYearFilter } from '../../reducers/currentFiltersReducer';
 import { useAppDispatch, useAppSelector } from '../../utils/hooks';
 
 type Props = {

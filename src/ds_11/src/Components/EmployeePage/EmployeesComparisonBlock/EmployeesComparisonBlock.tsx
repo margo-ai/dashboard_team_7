@@ -48,7 +48,6 @@ export const EmployeesComparisonBlock = () => {
     if (mainEmployeeSkillsData.length !== 0) {
       const options = getSelectOptionsFromSkillsData(mainEmployeeSkillsData);
       setFiltersOptions(options);
-      console.log({ options });
 
       let data = [];
       for (let i = 0; i < mainEmployeeSkillsData.length; i++) {
@@ -58,7 +57,7 @@ export const EmployeesComparisonBlock = () => {
           mainSort: 0
         });
       }
-      console.log({ mainData: data });
+
       setRadarData(data);
     }
   }, [mainEmployeeSkillsData]);
@@ -73,28 +72,6 @@ export const EmployeesComparisonBlock = () => {
       const toolSortMain = getSortOfCurrentSkill(mainEmployeeSkillsData, 'Технологии', toolFilter);
       const programSortMain = getSortOfCurrentSkill(mainEmployeeSkillsData, 'Инструменты', programFilter);
 
-      console.log({
-        kkkkk: progLangFilter,
-        dbmsFilter,
-        swTFilter,
-        frameworkFilter,
-        platformFilter,
-        toolFilter,
-        programFilter,
-        secondEmployeeSkillsData
-      });
-
-      console.log({
-        langSortMain,
-        dbmsSortMain,
-        swTSortMain,
-        frameworkSortMain,
-        platformSortMain,
-        toolSortMain,
-        programSortMain
-      });
-
-      console.log({ rrrr: radarData });
       const newData = radarData.map((item) => {
         if (item.type === 'Языки программирования') {
           return { ...item, skill: progLangFilter, mainSort: langSortMain, secondSort: 0 };
@@ -113,9 +90,6 @@ export const EmployeesComparisonBlock = () => {
         }
       });
 
-      console.log({ rrrr: radarData });
-
-      console.log({ dataWithout: newData });
       setRadarData(newData);
     } else {
       const langSortMain = getSortOfCurrentSkill(mainEmployeeSkillsData, 'Языки программирования', progLangFilter);
@@ -126,7 +100,6 @@ export const EmployeesComparisonBlock = () => {
       const toolSortMain = getSortOfCurrentSkill(mainEmployeeSkillsData, 'Технологии', toolFilter);
       const programSortMain = getSortOfCurrentSkill(mainEmployeeSkillsData, 'Инструменты', programFilter);
 
-      console.log({ langSortMain, dbmsSortMain });
       const newData = radarData.map((item) => {
         if (item.type === 'Языки программирования') {
           return { ...item, skill: progLangFilter, mainSort: langSortMain };
@@ -153,19 +126,8 @@ export const EmployeesComparisonBlock = () => {
       const toolSortSecond = getSortOfCurrentSkill(secondEmployeeSkillsData, 'Технологии', toolFilter);
       const programSortSecond = getSortOfCurrentSkill(secondEmployeeSkillsData, 'Инструменты', programFilter);
 
-      console.log({
-        langSortSecond,
-        dbmsSortSecond,
-        swTSortSecond,
-        frameworkSortSecond,
-        platformSortSecond,
-        toolSortSecond,
-        programSortSecond
-      });
-
       let dataWithSecondEmployee;
 
-      console.log({ secondEmployee: secondEmployeeSkillsData });
       dataWithSecondEmployee = newData.map((item) => {
         if (item.type === 'Языки программирования') {
           return { ...item, secondSort: langSortSecond === undefined ? 0 : langSortSecond };
@@ -184,7 +146,6 @@ export const EmployeesComparisonBlock = () => {
         }
       });
 
-      console.log({ dataWith: dataWithSecondEmployee });
       setRadarData(dataWithSecondEmployee);
     }
   }, [
@@ -212,7 +173,6 @@ export const EmployeesComparisonBlock = () => {
     dispatch(setComparisonEmployeeData(mappedData));
     const sortedSkills = sortSkillsArray(mappedData);
     dispatch(setComparisonEmployeeSkills(sortedSkills));
-    console.log({ sortedSkillsSecond: sortedSkills });
   };
 
   const handleClearFunc = (setSearchTerm) => {

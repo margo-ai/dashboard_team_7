@@ -8,3 +8,7 @@ export type TMappedData = {
   skillType: string;
   sort: number;
 }[];
+
+export type TSkillsUpEmployees = { quarter: string; employee_id: number }[];
+
+export type TAvgSkills = { quarter: string; employee_id: number; skill_id: number }[];

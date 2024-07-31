@@ -4,8 +4,6 @@ import './customTooltip.scss';
 
 export const CustomTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {
-    console.log({ payload });
-
     return (
       <div className="custom-tooltip">
         <p className="label">{`С сертификатами : ${payload[0].value}`}</p>

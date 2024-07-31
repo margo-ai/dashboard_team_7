@@ -130,6 +130,12 @@ $backgroundGradient: linear-gradient(
   #16204b 64%,
   #242e7e 92%
 );
+
+$barChartBackgroundGradient: linear-gradient(to bottom right, #000a3a 16%, #071140 30%, #121b48 41%, #252f82 92%);
+
 $dropdownBackgroundColor: #b5bbdb;
 $percentPlus: #45b375;
 $percentMinus: #a8333e;
+
+$haveCertColor: #31d9fe;
+$haventCertColor: #582cff;

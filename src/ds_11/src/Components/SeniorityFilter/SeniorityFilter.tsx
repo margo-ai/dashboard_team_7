@@ -13,7 +13,6 @@ export const SeniorityFilter = () => {
   const [seniority, setSeniority] = useState('all');
 
   const handleSeniorityChange = (event: { target: { value: string } }) => {
-    console.log(event.target.value);
     setSeniority(event.target.value);
   };
 

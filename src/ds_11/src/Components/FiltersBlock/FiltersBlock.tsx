@@ -9,47 +9,46 @@ import { ResetFiltersButton } from '../ui/ResetFiltersButton/ResetFiltersButton'
 
 import { useAppDispatch, useAppSelector } from '../../utils/hooks';
 
-import { setYearFilter, setFrcFilter, setSkillsTypeFilter } from '../../reducers/filtersReducer';
+import { setYearFilter, setSkillTypeFilter, setDeptFilter, setGradeFilter } from '../../reducers/currentFiltersReducer';
 
 export const FiltersBlock = () => {
   const [year, setYear] = useState(new Date('2022-01-01'));
 
-  const department = useAppSelector((state) => state.filters.frc);
-  const skillsType = useAppSelector((state) => state.filters.skillsType);
+  const skillTypeOptions = useAppSelector((state) => state.filtersOptions.skillType);
+  const departmentOptions = useAppSelector((state) => state.filtersOptions.department);
+
+  const currentDepartmentFilter = useAppSelector((state) => state.currentFilters.department);
+  const currentSkillTypeFilter = useAppSelector((state) => state.currentFilters.skillType);
 
   const dispatch = useAppDispatch();
 
-  const departments = [
-    { name: 'Все подразделения', value: 'all' },
-    { name: 'Отдел1', value: 'first' },
-    { name: 'Отдел2', value: 'second' },
-    { name: 'Отдел3', value: 'third' }
-  ];
-
-  const skillsTypes = [
-    { name: 'Все типы навыков', value: 'all' },
-    { name: 'Навыки1', value: 'first' },
-    { name: 'Навыки2', value: 'second' },
-    { name: 'Навыки3', value: 'third' }
-  ];
-
-  // useEffect(() => {
-  //   console.log({ position }, { department }, { skillsType });
-  // }, [position, department, skillsType]);
-
   const handleResetButton = () => {
-    dispatch(setYearFilter(2022));
     setYear(new Date('2022-01-01'));
+
+    dispatch(setYearFilter(2022));
+    dispatch(setDeptFilter('Все подразделения'));
+    dispatch(setSkillTypeFilter('Все типы навыков'));
+    dispatch(setGradeFilter('Все грейды'));
   };
 
   return (
     <div className="filtersBlock">
       <PeriodFilter year={year} setYear={setYear} />
       <SeniorityFilter />
-      <SelectFiltersBlock>
-        <SelectFilters options={departments} setSelectedFilter={setFrcFilter} />
-        <SelectFilters options={skillsTypes} setSelectedFilter={setSkillsTypeFilter} />
-      </SelectFiltersBlock>
+      {skillTypeOptions.length !== 0 && departmentOptions.length !== 0 && (
+        <SelectFiltersBlock>
+          <SelectFilters
+            options={departmentOptions}
+            setSelectedFilter={setDeptFilter}
+            selectedFilter={currentDepartmentFilter}
+          />
+          <SelectFilters
+            options={skillTypeOptions}
+            setSelectedFilter={setSkillTypeFilter}
+            selectedFilter={currentSkillTypeFilter}
+          />
+        </SelectFiltersBlock>
+      )}
       <ResetFiltersButton resetFunc={handleResetButton} />
     </div>
   );

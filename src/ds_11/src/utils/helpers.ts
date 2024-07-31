@@ -111,6 +111,56 @@ export const getSelectOptionsFromSkillsData = (skillsData: TSkillsData) => {
   return [progLangOptions, dbmsOptions, swTOptions, frameworkOptions, platformOptions, toolOptions, programOptions];
 };
 
+type TFilterType = 'department' | 'skillType' | 'grade';
+
+export const getSelectOptionsFromFiltersData = (filtersData, filterType: TFilterType) => {
+  const selectOptions = filtersData.map((item) => {
+    if (filterType === 'department') {
+      return { name: item.department, value: item.department };
+    } else if (filterType === 'skillType') {
+      if (item.skill_type === 'framework') {
+        return { name: 'Фреймворки', value: item.skill_type };
+      } else if (item.skill_type === 'sw_t') {
+        {
+          return { name: 'Типы систем', value: item.skill_type };
+        }
+      } else if (item.skill_type === 'program') {
+        {
+          return { name: 'Инструменты', value: item.skill_type };
+        }
+      } else if (item.skill_type === 'prog_lang') {
+        {
+          return { name: 'Языки программирования', value: item.skill_type };
+        }
+      } else if (item.skill_type === 'dbms') {
+        {
+          return { name: 'Базы данных', value: item.skill_type };
+        }
+      } else if (item.skill_type === 'tool') {
+        {
+          return { name: 'Технологии', value: item.skill_type };
+        }
+      } else if (item.skill_type === 'platform') {
+        {
+          return { name: 'Платформы', value: item.skill_type };
+        }
+      }
+    } else if (filterType === 'grade') {
+      return { name: item.grade_name, value: item.grade_name };
+    }
+  });
+
+  if (filterType === 'department') {
+    selectOptions.unshift({ name: 'Все подразделения', value: 'Все подразделения' });
+  } else if (filterType === 'skillType') {
+    selectOptions.unshift({ name: 'Все типы навыков', value: 'Все типы навыков' });
+  } else if (filterType === 'grade') {
+    selectOptions.unshift({ name: 'Все грейды', value: 'Все грейды' });
+  }
+
+  return selectOptions;
+};
+
 export const getSortOfCurrentSkill = (
   skillsData: TSkillsData,
   currentSkillType: string,
@@ -208,4 +258,91 @@ export const transformSkillsUpChartData = (withCertEmployees: TSkillsUpData, wit
   });
 
   return result;
+};
+
+type TAvgSkillsData = { quarter: string; employee_id: number; skill_id: number }[];
+
+const getAvgSkills = (data: TAvgSkillsData) => {
+  const transformedData = data.map((item) => {
+    return {
+      quarter: item.quarter,
+      avgSkills: item.employee_id === 0 ? 0 : Math.round(item.skill_id / item.employee_id)
+    };
+  });
+  return transformedData;
+};
+
+export const joinAvgSkills = (dataWithCert: TAvgSkillsData, dataWithoutCert: TAvgSkillsData) => {
+  const withCertAvg =
+    dataWithCert.length === 0
+      ? [
+          { quarter: '1', avgSkills: 0 },
+          { quarter: '2', avgSkills: 0 },
+          { quarter: '3', avgSkills: 0 },
+          { quarter: '4', avgSkills: 0 }
+        ]
+      : getAvgSkills(dataWithCert);
+  // const dataWithCert = getAvgSkills(avgSkillsWithCert);
+  const withoutCertAvg =
+    dataWithoutCert.length === 0
+      ? [
+          { quarter: '1', avgSkills: 0 },
+          { quarter: '2', avgSkills: 0 },
+          { quarter: '3', avgSkills: 0 },
+          { quarter: '4', avgSkills: 0 }
+        ]
+      : getAvgSkills(dataWithoutCert);
+
+  const joinedData = [];
+  for (let i = 0; i < 4; i++) {
+    const quarter = (i + 1).toString();
+    const withCertItem = withCertAvg.find((item) => item.quarter === quarter);
+    const withoutCertItem = withoutCertAvg.find((item) => item.quarter === quarter);
+
+    joinedData.push({
+      quarter: `${quarter} квартал`,
+      withCert: withCertItem ? withCertItem.avgSkills : 0,
+      withoutCert: withoutCertItem ? withoutCertItem.avgSkills : 0
+    });
+  }
+  return joinedData;
+};
+
+export const groupLowestSkillsData = (data, skillIds) => {
+  const chartData = [{}, {}, {}, {}, {}];
+  for (let i = 0; i < data.length; i++) {
+    if (data[i].skill_id === skillIds[0]) {
+      if (!chartData[0].hasOwnProperty('name')) {
+        chartData[0] = { name: data[i].skill_name, [data[i].grade_name]: data[i].employee_id };
+      } else {
+        chartData[0] = { ...chartData[0], [data[i].grade_name]: data[i].employee_id };
+      }
+    } else if (data[i].skill_id === skillIds[1]) {
+      if (!chartData[1].hasOwnProperty('name')) {
+        chartData[1] = { name: data[i].skill_name, [data[i].grade_name]: data[i].employee_id };
+      } else {
+        chartData[1] = { ...chartData[1], [data[i].grade_name]: data[i].employee_id };
+      }
+    } else if (data[i].skill_id === skillIds[2]) {
+      if (!chartData[2].hasOwnProperty('name')) {
+        chartData[2] = { name: data[i].skill_name, [data[i].grade_name]: data[i].employee_id };
+      } else {
+        chartData[2] = { ...chartData[2], [data[i].grade_name]: data[i].employee_id };
+      }
+    } else if (data[i].skill_id === skillIds[3]) {
+      if (!chartData[3].hasOwnProperty('name')) {
+        chartData[3] = { name: data[i].skill_name, [data[i].grade_name]: data[i].employee_id };
+      } else {
+        chartData[3] = { ...chartData[3], [data[i].grade_name]: data[i].employee_id };
+      }
+    } else if (data[i].skill_id === skillIds[4]) {
+      if (!chartData[4].hasOwnProperty('name')) {
+        chartData[4] = { name: data[i].skill_name, [data[i].grade_name]: data[i].employee_id };
+      } else {
+        chartData[4] = { ...chartData[4], [data[i].grade_name]: data[i].employee_id };
+      }
+    }
+  }
+
+  return chartData;
 };

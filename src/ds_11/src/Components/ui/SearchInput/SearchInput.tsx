@@ -35,21 +35,16 @@ export const SearchInput = ({ setDataFunc, handleClearFunc }: Props) => {
     setError(false);
     setErrorText('');
     setSearchTerm(e.target.value);
-    // console.log(e.target.value);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    console.log('Поиск по:', searchTerm);
-    // setSearchTerm('');
     const searchArray = searchTerm.trim().split(' ');
-    console.log(searchArray);
 
     if (searchArray.length === 1) {
       setError(true);
       setErrorText('Введите имя и фамилию');
-      console.log('Введите имя и фамилию');
     } else {
       koobDataRequest3(
         'etl_db_7.employee_koob',
@@ -63,12 +58,9 @@ export const SearchInput = ({ setDataFunc, handleClearFunc }: Props) => {
         { schema_name: 'ds_11' },
         'ourRequest'
       ).then((res) => {
-        console.log({ res });
-
         if (res.length === 0) {
           setError(true);
           setErrorText('Сотрудник не найден');
-          console.log('Сотрудник не найден');
         } else {
           const mappedData = res.map((el, i) => {
             return {
@@ -83,7 +75,6 @@ export const SearchInput = ({ setDataFunc, handleClearFunc }: Props) => {
             };
           });
 
-          console.log({ mapped: mappedData });
           setDataFunc(mappedData);
         }
       });

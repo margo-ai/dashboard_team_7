@@ -15,21 +15,6 @@ const { koobDataRequest3 } = KoobDataService;
 import { Route } from './src/Components/Route/Route';
 
 function App() {
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    koobDataRequest3(
-      'etl_db_7.employee_koob',
-      ['employee_id'], //размерности
-      ['sum(sort)'], //факты
-      {},
-      { schema_name: 'ds_11' },
-      'ourRequest'
-    ).then((res) => {
-      // console.log({ test: res });
-    });
-  }, []);
-
   return (
     <Provider store={store}>
       <div className="App scroller">

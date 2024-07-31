@@ -12,21 +12,11 @@ export const SkillsSection = () => {
   const employeeData = useAppSelector((state) => state.employee.employeeData);
   const skillsData = useAppSelector((state) => state.skills.mainEmployeeSkills);
 
-  const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState(null);
 
-  // const handleButtonClick = (tabName) => {
-  //   setIsOpen(!isOpen);
-  //   setActiveKey(activeKey === tabName ? null : tabName);
-  //   console.log(tabName);
-  // };
   const handleTabClick = (tabName) => {
     setActiveTab(activeTab === tabName ? null : tabName);
   };
-
-  useEffect(() => {
-    console.log({ skillsData });
-  }, [skillsData]);
 
   return (
     <>
