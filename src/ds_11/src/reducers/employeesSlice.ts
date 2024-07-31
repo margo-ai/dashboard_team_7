@@ -9,6 +9,7 @@ type TEmployee = {
   skill: string;
   skillDetail: string;
   sort: number;
+  employeeId: number;
 }[];
 
 type TState = {

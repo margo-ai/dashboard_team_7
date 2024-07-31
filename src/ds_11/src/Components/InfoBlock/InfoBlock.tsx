@@ -51,6 +51,7 @@ export const InfoBlock = () => {
       'ourRequest'
     ).then((res) => {
       setCurrentYearSkills(res[0].skill_id);
+      console.log({ currentYearSkills: res[0].skill_id });
     });
 
     koobDataRequest3(
@@ -65,6 +66,7 @@ export const InfoBlock = () => {
       'ourRequest'
     ).then((res) => {
       setLastYearSkills(res[0].skill_id);
+      console.log({ lastYearSkills: res[0].skill_id });
     });
 
     koobDataRequest3(

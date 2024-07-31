@@ -41,7 +41,18 @@ export const SearchInput = ({ setDataFunc, handleClearFunc }: Props) => {
     } else {
       koobDataRequest3(
         'etl_db_7.employee_koob',
-        ['name', 'surname', 'skill_name', 'skill_type', 'email', 'department', 'position', 'grade', 'sort'],
+        [
+          'name',
+          'surname',
+          'skill_name',
+          'skill_type',
+          'email',
+          'department',
+          'position',
+          'grade',
+          'sort',
+          'employee_id'
+        ],
         [],
         {
           surname: ['=', changeFirstLetterToUpperCase(searchArray[1])],
@@ -64,7 +75,8 @@ export const SearchInput = ({ setDataFunc, handleClearFunc }: Props) => {
               skillType: el.skill_type,
               skillName: el.skill_name,
               sort: el.sort,
-              skillGrade: el.grade
+              skillGrade: el.grade,
+              employeeId: el.employee_id
             };
           });
 

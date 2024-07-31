@@ -2,7 +2,7 @@ import React from 'react';
 
 export const CertificateIcon = () => {
   return (
-    <svg width="57" height="60" viewBox="0 0 57 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width="100%" height="60" viewBox="0 0 57 60" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M51 30V13.121C51 12.6914 50.8104 12.2793 50.4729 11.9755L41.0271 3.4745C40.6896 3.17067 40.2318 3 39.7545 3H4.8C3.80589 3 3 3.7253 3 4.62V55.3799C3 56.2747 3.80589 56.9999 4.8 56.9999H24"
         stroke="white"

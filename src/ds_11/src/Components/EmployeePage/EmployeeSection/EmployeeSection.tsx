@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { KoobDataService } from 'bi-internal/services';
 const { koobDataRequest3 } = KoobDataService;
 
@@ -23,10 +23,31 @@ import {
   setTool
 } from '../../../reducers/comparisonFiltersSlice';
 
+import { CertificateIcon } from '../../ui/iconsComponents/CertificateIcon/CertificateIcon';
+
 export const EmployeeSection = () => {
   const dispatch = useAppDispatch();
 
-  const data = useAppSelector((state) => state.employee.employeeData);
+  const [employeeRank, setEmployeeRank] = useState<number>(null);
+
+  const employeeData = useAppSelector((state) => state.employee.employeeData);
+
+  useEffect(() => {
+    if (employeeData.length !== 0) {
+      koobDataRequest3(
+        'etl_db_7.employee_koob',
+        ['course_rank'],
+        [],
+        { employee_id: ['=', employeeData[0].employeeId] },
+        { schema_name: 'ds_11' },
+        'ourRequest'
+      ).then((res) => {
+        setEmployeeRank(res[0].course_rank);
+      });
+    }
+
+    console.log({ employeeData });
+  }, [employeeData]);
 
   const setDataFunc = (mappedData) => {
     // localStorage.setItem('employee', mappedData[0].name);
@@ -60,18 +81,37 @@ export const EmployeeSection = () => {
           <EmployeeTitleIcon />
         </EmployeeInfoTitle>
         <ul className="employeeDetails">
-          {data.length !== 0 ? (
+          {employeeData.length !== 0 ? (
             <>
-              <li className="employeeDetails__item">{data[0].name}</li>
-              <li className="employeeDetails__item">Контактная инф.: {data[0].email}</li>
-              <li className="employeeDetails__item">Департамент: {data[0].department}</li>
-              <li className="employeeDetails__item">Должность: {data[0].position}</li>
+              <li className="employeeDetails__item">{employeeData[0].name}</li>
+              <li className="employeeDetails__item">Контактная инф.: {employeeData[0].email}</li>
+              <li className="employeeDetails__item">Департамент: {employeeData[0].department}</li>
+              <li className="employeeDetails__item">Должность: {employeeData[0].position}</li>
             </>
           ) : (
             <>Введите корректное имя сотрудника</>
           )}
         </ul>
       </div>
+      {employeeData.length !== 0 && (
+        <div className="employeeSection__courses">
+          <EmployeeInfoTitle title="Курсы" width={271}>
+            <CertificateIcon />
+          </EmployeeInfoTitle>
+          <div className="employeeSection__ratingBlock">
+            <div className="employeeSection__ratingCircle">
+              {!!employeeRank ? (
+                <>
+                  <div style={{ marginBottom: '35px' }}> Место в рейтинге по пройденным курсам </div>
+                  <div style={{ fontSize: '48px' }}>{employeeRank}/20</div>
+                </>
+              ) : (
+                'Данный сотрудник не проходил курсы'
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 };

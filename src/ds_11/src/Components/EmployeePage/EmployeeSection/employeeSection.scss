@@ -4,6 +4,25 @@
   &__info {
     margin-top: 44px;
   }
+
+  &__ratingBlock {
+    margin-top: 51px;
+  }
+
+  &__ratingCircle {
+    width: 350px;
+    height: 350px;
+    border-radius: 50%;
+    border: 30px solid #7ad3ff;
+    font-size: 28px;
+    font-weight: 700;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    padding: 40px;
+  }
 }
 
 .employeeDetails {
