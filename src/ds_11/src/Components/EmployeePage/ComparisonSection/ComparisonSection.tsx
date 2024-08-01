@@ -9,7 +9,6 @@ import { useAppSelector } from '../../../utils/hooks';
 
 export const ComparisonSection = () => {
   const employeeData = useAppSelector((state) => state.employee.employeeData);
-  const mainEmployeeSkillsData = useAppSelector((state) => state.skills.mainEmployeeSkills);
 
   return (
     <section className="comparisonSection" style={{ display: `${employeeData.length !== 0 ? 'block' : 'none'}` }}>

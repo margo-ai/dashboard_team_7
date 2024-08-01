@@ -10,7 +10,7 @@ type TFilters = {
 const initialState: TFilters = {
   department: 'Все подразделения',
   skillType: 'Все типы навыков',
-  year: 2022,
+  year: 2023,
   grade: 'Все грейды'
 };
 

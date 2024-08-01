@@ -12,6 +12,10 @@
     width: 226px;
     margin-left: auto;
     margin-top: 40px;
+
+    .p-dropdown {
+      width: 226px;
+    }
   }
 
   &__legend {
@@ -47,6 +51,10 @@
 }
 
 .skillsUpChart {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
   & .haveCert {
     fill: $haveCertColor;
   }

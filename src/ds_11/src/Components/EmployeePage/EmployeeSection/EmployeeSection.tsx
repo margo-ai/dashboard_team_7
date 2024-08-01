@@ -38,7 +38,7 @@ export const EmployeeSection = () => {
         'etl_db_7.employee_koob',
         ['course_rank'],
         [],
-        { employee_id: ['=', employeeData[0].employeeId] },
+        { e_id: ['=', employeeData[0].employeeId] },
         { schema_name: 'ds_11' },
         'ourRequest'
       ).then((res) => {

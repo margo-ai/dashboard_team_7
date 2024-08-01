@@ -24,7 +24,7 @@ export const CertificatesStatistickBlock = ({ count, percent, title, children }:
                 : 'certificatesStatistickBlock__percent percent-plus'
             }`}
           >
-            {percent}%
+            {percent[0] === '-' ? percent.slice(1) : percent}%
           </div>
         </div>
       </div>

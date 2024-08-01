@@ -4,9 +4,10 @@
   & .statisticBlock {
     display: flex;
     justify-content: space-between;
+    flex-direction: column;
     gap: 15px;
-    flex-wrap: wrap;
-
+    width: 80%;
+    max-width: 500px;
     margin-bottom: 15px;
   }
 }

@@ -8,9 +8,12 @@ import { CertificatesStatistickBlock } from '../CertificatesStatisticBlock/Certi
 import { CertificateIcon } from '../ui/iconsComponents/CertificateIcon/CertificateIcon';
 import { CircleIcon } from '../ui/iconsComponents/CircleIcon/CircleIcon';
 import { useAppSelector } from '../../utils/hooks';
+import { createRequestFilters } from '../../utils/helpers';
 
 export const InfoBlock = () => {
   const currentYear = useAppSelector((state) => state.currentFilters.year);
+  const currentDepartment = useAppSelector((state) => state.currentFilters.department);
+  const currentSkillType = useAppSelector((state) => state.currentFilters.skillType);
 
   const [employeesCount, setEmployeesCount] = useState<number>(0);
 
@@ -25,78 +28,79 @@ export const InfoBlock = () => {
 
   useEffect(() => {
     koobDataRequest3(
-      'etl_db_7.department_koob_1',
-      ['count(distinct(employee_id))'],
+      'etl_db_7.department_koob',
+      ['count(distinct(e_id))'],
       [],
       {
         y: ['=', currentYear],
-        rank_grade: ['=', 1],
         quarter: ['=', '4']
       },
       { schema_name: 'ds_11' },
       'ourRequest'
     ).then((res) => {
-      setEmployeesCount(res[0].employee_id);
+      setEmployeesCount(res[0].e_id);
     });
 
     koobDataRequest3(
-      'etl_db_7.department_koob_1',
+      'etl_db_7.department_koob',
       ['count(skill_id)'],
       [],
       {
         y: ['=', currentYear],
-        quarter: ['=', '4']
+        data_type: ['=', 'актуальные'],
+        '': createRequestFilters({ department: currentDepartment, skillType: currentSkillType })
       },
       { schema_name: 'ds_11' },
       'ourRequest'
     ).then((res) => {
       setCurrentYearSkills(res[0].skill_id);
-      console.log({ currentYearSkills: res[0].skill_id });
     });
 
     koobDataRequest3(
-      'etl_db_7.department_koob_1',
+      'etl_db_7.department_koob',
       ['count(skill_id)'],
       [],
       {
         y: ['=', currentYear - 1],
-        quarter: ['=', '4']
+        data_type: ['=', 'актуальные'],
+        '': createRequestFilters({ department: currentDepartment, skillType: currentSkillType })
       },
       { schema_name: 'ds_11' },
       'ourRequest'
     ).then((res) => {
       setLastYearSkills(res[0].skill_id);
-      console.log({ lastYearSkills: res[0].skill_id });
     });
 
     koobDataRequest3(
-      'etl_db_7.department_koob_1',
-      ['count(distinct(employee_id))'],
+      'etl_db_7.department_koob',
+      ['count(distinct(e_id))'],
       [],
       {
         y: ['=', currentYear],
-        quarter: ['=', '4']
+        data_type: ['=', 'актуальные'],
+        '': createRequestFilters({ department: currentDepartment, skillType: currentSkillType })
       },
       { schema_name: 'ds_11' },
       'ourRequest'
     ).then((res) => {
-      setCurrentYearEmployees(res[0].employee_id);
+      setCurrentYearEmployees(res[0].e_id);
     });
 
     koobDataRequest3(
-      'etl_db_7.department_koob_1',
-      ['count(distinct(employee_id))'],
+      'etl_db_7.department_koob',
+      ['count(distinct(e_id))'],
       [],
       {
         y: ['=', currentYear - 1],
-        quarter: ['=', '4']
+        data_type: ['=', 'актуальные'],
+        '': createRequestFilters({ department: currentDepartment, skillType: currentSkillType })
       },
       { schema_name: 'ds_11' },
       'ourRequest'
     ).then((res) => {
-      setLastYearEmployees(res[0].employee_id);
+      setLastYearEmployees(res[0].e_id);
     });
-  }, [currentYear]);
+  }, [currentYear, currentDepartment, currentSkillType]);
 
   useEffect(() => {
     if (!!currentYearSkills && !!lastYearSkills && !!currentYearEmployees && !!lastYearEmployees) {
@@ -112,7 +116,7 @@ export const InfoBlock = () => {
 
   return (
     <div className="infoBlock">
-      <div className="employeesCountBlock">
+      {/* <div className="employeesCountBlock">
         <div className="employeesCountBlock__icon">
           <EmployeesCountIcon />
         </div>
@@ -120,7 +124,7 @@ export const InfoBlock = () => {
           <div className="employeesCountBlock__count">{!!employeesCount ? employeesCount : 0}</div>
           <div className="employeesCountBlock__title">сотрудников</div>
         </div>
-      </div>
+      </div> */}
       <div className="statisticBlock">
         {skillsUpgrade.length !== 0 && (
           <CertificatesStatistickBlock count={skillsUpgrade[0]} percent={skillsUpgrade[1]} title="повышение грейдов">

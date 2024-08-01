@@ -12,7 +12,7 @@ import { useAppDispatch, useAppSelector } from '../../utils/hooks';
 import { setYearFilter, setSkillTypeFilter, setDeptFilter, setGradeFilter } from '../../reducers/currentFiltersReducer';
 
 export const FiltersBlock = () => {
-  const [year, setYear] = useState(new Date('2022-01-01'));
+  const [year, setYear] = useState(new Date('2023-01-01'));
 
   const skillTypeOptions = useAppSelector((state) => state.filtersOptions.skillType);
   const departmentOptions = useAppSelector((state) => state.filtersOptions.department);
@@ -23,9 +23,9 @@ export const FiltersBlock = () => {
   const dispatch = useAppDispatch();
 
   const handleResetButton = () => {
-    setYear(new Date('2022-01-01'));
+    setYear(new Date('2023-01-01'));
 
-    dispatch(setYearFilter(2022));
+    dispatch(setYearFilter(2023));
     dispatch(setDeptFilter('Все подразделения'));
     dispatch(setSkillTypeFilter('Все типы навыков'));
     dispatch(setGradeFilter('Все грейды'));

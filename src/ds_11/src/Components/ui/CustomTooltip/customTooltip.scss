@@ -1,5 +1,15 @@
-.custom-tooltip {
-  background-color: '#fff';
+@import '../../../../../vars.scss';
+
+.customTooltip {
+  background-color: #fff;
   border: 1px solid rgba(13, 13, 13, 0.2);
-  padding: 5px;
+  padding: 15px;
+
+  &__haveCertLabel {
+    color: $haveCertColor;
+    margin-bottom: 5px;
+  }
+  &__haventCertLabel {
+    color: $haventCertColor;
+  }
 }

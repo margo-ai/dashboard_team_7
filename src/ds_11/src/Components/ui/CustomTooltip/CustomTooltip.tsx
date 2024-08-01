@@ -1,14 +1,27 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import './customTooltip.scss';
 
-export const CustomTooltip = ({ active, payload }) => {
+export const CustomTooltip = ({ active, payload, chartType }) => {
   if (active && payload && payload.length) {
+    useEffect(() => {
+      console.log({ payload });
+    }, []);
+
     return (
-      <div className="custom-tooltip">
-        <p className="label">{`С сертификатами : ${payload[0].value}`}</p>
-        <p className="label">{`Без сертификатов : ${payload[2].value}`}</p>
-      </div>
+      <>
+        {chartType === 'bar' ? (
+          <div className="customTooltip">
+            <p className="customTooltip__haveCertLabel">{`С сертификатами : ${payload[0].value}%`}</p>
+            <p className="customTooltip__haventCertLabel">{`Без сертификатов : ${payload[1].value}%`}</p>
+          </div>
+        ) : (
+          <div className="customTooltip">
+            <p className="customTooltip__haveCertLabel">{`С сертификатами : ${payload[0].value}`}</p>
+            <p className="customTooltip__haventCertLabel">{`Без сертификатов : ${payload[1].value}`}</p>
+          </div>
+        )}
+      </>
     );
   }
 

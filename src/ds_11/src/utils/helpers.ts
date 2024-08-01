@@ -111,6 +111,10 @@ export const getSelectOptionsFromSkillsData = (skillsData: TSkillsData) => {
   return [progLangOptions, dbmsOptions, swTOptions, frameworkOptions, platformOptions, toolOptions, programOptions];
 };
 
+const sortByOptionField = (fieldName) => {
+  return (a, b) => (a[fieldName] > b[fieldName] ? 1 : -1);
+};
+
 type TFilterType = 'department' | 'skillType' | 'grade';
 
 export const getSelectOptionsFromFiltersData = (filtersData, filterType: TFilterType) => {
@@ -149,6 +153,8 @@ export const getSelectOptionsFromFiltersData = (filtersData, filterType: TFilter
       return { name: item.grade_name, value: item.grade_name };
     }
   });
+  console.log({ selectOptions });
+  selectOptions.sort(sortByOptionField('name'));
 
   if (filterType === 'department') {
     selectOptions.unshift({ name: 'Все подразделения', value: 'Все подразделения' });
@@ -188,7 +194,7 @@ export const getSortOfCurrentSkill = (
 };
 
 const fillMissingQuarters = (data) => {
-  const quarters = ['1', '2', '3', '4'];
+  const quarters = [1, 2, 3, 4];
   const result = [];
 
   quarters.forEach((quarter) => {
@@ -197,76 +203,71 @@ const fillMissingQuarters = (data) => {
     if (existingData) {
       result.push(existingData);
     } else {
-      result.push({ quarter, employee_id: 0 });
+      result.push({ quarter, e_id: 0 });
     }
   });
 
   return result;
 };
 
-type TSkillsUpData = { quarter: string; employee_id: number }[];
+const sortByQuarter = (a, b) => {
+  const quarterA = Number(a.quarter);
+  const quarterB = Number(b.quarter);
+  return quarterA - quarterB;
+};
 
-export const transformSkillsUpChartData = (withCertEmployees: TSkillsUpData, withoutCartEmployees: TSkillsUpData) => {
-  const totalEmployeesCount = [0, 0, 0, 0];
-  const haveCertCount = [0, 0, 0, 0];
-  const haventCertCount = [0, 0, 0, 0];
+type TSkillsUpWithCert = { quarter: number; e_id: number; quantity_with_cer: number }[];
+type TSkillsUpWithOutCert = { quarter: number; e_id: number; quantity_without_cer: number }[];
+
+export const transformSkillsUpChartData = (
+  withCertEmployees: TSkillsUpWithCert,
+  withoutCertEmployees: TSkillsUpWithOutCert
+) => {
+  withCertEmployees.sort(sortByQuarter);
+
+  withoutCertEmployees.sort(sortByQuarter);
+
+  const updatedHaveCertEmployees = fillMissingQuarters(withCertEmployees);
+  const updatedHaventCertEmployees = fillMissingQuarters(withoutCertEmployees);
+
   const haveCertResult = [];
   const haventCertResult = [];
 
-  withCertEmployees.sort((a, b) => {
-    const quarterA = Number(a.quarter);
-    const quarterB = Number(b.quarter);
-    return quarterA - quarterB;
-  });
-
-  withoutCartEmployees.sort((a, b) => {
-    const quarterA = Number(a.quarter);
-    const quarterB = Number(b.quarter);
-    return quarterA - quarterB;
-  });
-
-  const updatedHaveCertEmployees = fillMissingQuarters(withCertEmployees);
-  const updatedHaventCertEmployees = fillMissingQuarters(withoutCartEmployees);
-
-  for (let i = 0; i < updatedHaveCertEmployees.length; i++) {
-    haveCertCount[i] = updatedHaveCertEmployees[i].employee_id;
-  }
-
-  for (let i = 0; i < updatedHaventCertEmployees.length; i++) {
-    haventCertCount[i] = updatedHaventCertEmployees[i].employee_id;
-  }
-
-  for (let i = 0; i < 4; i++) {
-    totalEmployeesCount[i] = haveCertCount[i] + haventCertCount[i];
-  }
-
-  for (let i = 0; i < 4; i++) {
-    if (totalEmployeesCount[i] === 0) {
-      haveCertResult.push({ name: `${i + 1} квартал`, haveCert: 0 });
-      haventCertResult.push(0);
+  updatedHaveCertEmployees.forEach((entry) => {
+    if (!entry.quantity_with_cer) {
+      haveCertResult.push({ quarter: `${entry.quarter} квартал`, haveCert: 0 });
     } else {
       haveCertResult.push({
-        name: `${i + 1} квартал`,
-        haveCert: Number(((haveCertCount[i] / totalEmployeesCount[i]) * 100).toFixed(2))
+        quarter: `${entry.quarter} квартал`,
+        haveCert: Number(((entry.e_id / entry.quantity_with_cer) * 100).toFixed(2))
       });
-      haventCertResult.push(Number(((haventCertCount[i] / totalEmployeesCount[i]) * 100).toFixed(2)));
     }
-  }
-
-  const result = haveCertResult.map((item, index) => {
-    return { ...item, haventCert: haventCertResult[index] };
   });
 
+  updatedHaventCertEmployees.forEach((entry) => {
+    if (!entry.quantity_without_cer) {
+      haventCertResult.push({ quarter: `${entry.quarter} квартал`, haventCert: 0 });
+    } else {
+      haventCertResult.push({
+        quarter: `${entry.quarter} квартал`,
+        haventCert: Number(((entry.e_id / entry.quantity_without_cer) * 100).toFixed(2))
+      });
+    }
+  });
+
+  const result = haveCertResult.map((item, index) => {
+    return { ...item, haventCert: haventCertResult[index].haventCert };
+  });
   return result;
 };
 
-type TAvgSkillsData = { quarter: string; employee_id: number; skill_id: number }[];
+type TAvgSkillsData = { quarter: number; e_id: number; skill_id: number }[];
 
 const getAvgSkills = (data: TAvgSkillsData) => {
   const transformedData = data.map((item) => {
     return {
       quarter: item.quarter,
-      avgSkills: item.employee_id === 0 ? 0 : Math.round(item.skill_id / item.employee_id)
+      avgSkills: item.e_id === 0 ? 0 : Math.round(item.skill_id / item.e_id)
     };
   });
   return transformedData;
@@ -276,26 +277,25 @@ export const joinAvgSkills = (dataWithCert: TAvgSkillsData, dataWithoutCert: TAv
   const withCertAvg =
     dataWithCert.length === 0
       ? [
-          { quarter: '1', avgSkills: 0 },
-          { quarter: '2', avgSkills: 0 },
-          { quarter: '3', avgSkills: 0 },
-          { quarter: '4', avgSkills: 0 }
+          { quarter: 1, avgSkills: 0 },
+          { quarter: 2, avgSkills: 0 },
+          { quarter: 3, avgSkills: 0 },
+          { quarter: 4, avgSkills: 0 }
         ]
       : getAvgSkills(dataWithCert);
-  // const dataWithCert = getAvgSkills(avgSkillsWithCert);
   const withoutCertAvg =
     dataWithoutCert.length === 0
       ? [
-          { quarter: '1', avgSkills: 0 },
-          { quarter: '2', avgSkills: 0 },
-          { quarter: '3', avgSkills: 0 },
-          { quarter: '4', avgSkills: 0 }
+          { quarter: 1, avgSkills: 0 },
+          { quarter: 2, avgSkills: 0 },
+          { quarter: 3, avgSkills: 0 },
+          { quarter: 4, avgSkills: 0 }
         ]
       : getAvgSkills(dataWithoutCert);
 
   const joinedData = [];
   for (let i = 0; i < 4; i++) {
-    const quarter = (i + 1).toString();
+    const quarter = i + 1;
     const withCertItem = withCertAvg.find((item) => item.quarter === quarter);
     const withoutCertItem = withoutCertAvg.find((item) => item.quarter === quarter);
 
@@ -313,33 +313,33 @@ export const groupLowestSkillsData = (data, skillIds) => {
   for (let i = 0; i < data.length; i++) {
     if (data[i].skill_id === skillIds[0]) {
       if (!chartData[0].hasOwnProperty('name')) {
-        chartData[0] = { name: data[i].skill_name, [data[i].grade_name]: data[i].employee_id };
+        chartData[0] = { name: data[i].skill_name, [data[i].grade_name]: data[i].e_id };
       } else {
-        chartData[0] = { ...chartData[0], [data[i].grade_name]: data[i].employee_id };
+        chartData[0] = { ...chartData[0], [data[i].grade_name]: data[i].e_id };
       }
     } else if (data[i].skill_id === skillIds[1]) {
       if (!chartData[1].hasOwnProperty('name')) {
-        chartData[1] = { name: data[i].skill_name, [data[i].grade_name]: data[i].employee_id };
+        chartData[1] = { name: data[i].skill_name, [data[i].grade_name]: data[i].e_id };
       } else {
-        chartData[1] = { ...chartData[1], [data[i].grade_name]: data[i].employee_id };
+        chartData[1] = { ...chartData[1], [data[i].grade_name]: data[i].e_id };
       }
     } else if (data[i].skill_id === skillIds[2]) {
       if (!chartData[2].hasOwnProperty('name')) {
-        chartData[2] = { name: data[i].skill_name, [data[i].grade_name]: data[i].employee_id };
+        chartData[2] = { name: data[i].skill_name, [data[i].grade_name]: data[i].e_id };
       } else {
-        chartData[2] = { ...chartData[2], [data[i].grade_name]: data[i].employee_id };
+        chartData[2] = { ...chartData[2], [data[i].grade_name]: data[i].e_id };
       }
     } else if (data[i].skill_id === skillIds[3]) {
       if (!chartData[3].hasOwnProperty('name')) {
-        chartData[3] = { name: data[i].skill_name, [data[i].grade_name]: data[i].employee_id };
+        chartData[3] = { name: data[i].skill_name, [data[i].grade_name]: data[i].e_id };
       } else {
-        chartData[3] = { ...chartData[3], [data[i].grade_name]: data[i].employee_id };
+        chartData[3] = { ...chartData[3], [data[i].grade_name]: data[i].e_id };
       }
     } else if (data[i].skill_id === skillIds[4]) {
       if (!chartData[4].hasOwnProperty('name')) {
-        chartData[4] = { name: data[i].skill_name, [data[i].grade_name]: data[i].employee_id };
+        chartData[4] = { name: data[i].skill_name, [data[i].grade_name]: data[i].e_id };
       } else {
-        chartData[4] = { ...chartData[4], [data[i].grade_name]: data[i].employee_id };
+        chartData[4] = { ...chartData[4], [data[i].grade_name]: data[i].e_id };
       }
     }
   }

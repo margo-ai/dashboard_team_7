@@ -3,12 +3,14 @@
 .skillsSection {
   margin-top: 23px;
 
-  max-width: 474px;
+  width: 460px;
+  flex-grow: 0.2;
 
   &__tabs {
+    width: 100%;
     background-color: #252e55;
     border-radius: 20px;
-    padding: 71px 68px;
+    padding: 70px 50px;
     margin-top: 26px;
 
     font-size: 16px;
@@ -49,9 +51,8 @@
   }
 
   &__item {
-    display: grid;
-    // justify-content: space-between;
-    grid-template-columns: repeat(2, 50%);
+    display: flex;
+    justify-content: space-between;
     gap: 12px;
 
     &:not(:last-child) {
@@ -64,13 +65,18 @@
     background-color: #353c69;
     border-radius: 20px;
     padding: 12px 14px;
+  }
 
-    max-width: 119px;
+  &__skill {
+    width: 130px;
+    flex-grow: 0.5;
+    word-break: break-word;
   }
 
   &__grade {
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 120px;
   }
 }

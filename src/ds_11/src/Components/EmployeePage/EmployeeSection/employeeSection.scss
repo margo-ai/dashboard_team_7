@@ -1,8 +1,13 @@
 .employeeSection {
-  max-width: 480px;
+  // max-width: 480px;
+  width: 440px;
 
   &__info {
     margin-top: 44px;
+  }
+
+  &__courses {
+    margin-top: 51px;
   }
 
   &__ratingBlock {

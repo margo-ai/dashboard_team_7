@@ -20,14 +20,14 @@ import './dynamicChartsSection.scss';
 import { CustomTooltip } from '../ui/CustomTooltip/CustomTooltip';
 import { useAppSelector } from '../../utils/hooks';
 import { createRequestFilters, joinAvgSkills, transformSkillsUpChartData } from '../../utils/helpers';
-import { TAvgSkills, TSkillsUpEmployees } from '../../utils/types';
+import { TAvgSkills, TSkillsUpEmployeesWithCert, TSkillsUpEmployeesWithoutCert } from '../../utils/types';
 import { SelectFiltersBlock } from '../SelectFiltersBlock/SelectFiltersBlock';
 import { SelectFilters } from '../SelectFilters/SelectFilters';
 import { setGradeFilter } from '../../reducers/currentFiltersReducer';
 
 export const DynamicChartsSection = () => {
-  const [haveCertEmployees, setHaveCertEmployees] = useState<TSkillsUpEmployees>([]);
-  const [haventCertEmployees, setHaventCertEmployees] = useState<TSkillsUpEmployees>([]);
+  const [haveCertEmployees, setHaveCertEmployees] = useState<TSkillsUpEmployeesWithCert>([]);
+  const [haventCertEmployees, setHaventCertEmployees] = useState<TSkillsUpEmployeesWithoutCert>([]);
   const [skillUpChartData, setSkillUpChartData] = useState([]);
 
   const [avgSkillsWithCert, setAvgSkillsWithCert] = useState<TAvgSkills>([]);
@@ -42,9 +42,9 @@ export const DynamicChartsSection = () => {
 
   useEffect(() => {
     koobDataRequest3(
-      'etl_db_7.department_koob_1',
-      ['quarter'],
-      ['count(employee_id)'],
+      'etl_db_7.department_koob',
+      ['quarter', 'count(distinct(e_id))', 'avg(quantity_with_cer)'],
+      [],
       {
         y: ['=', currentYear],
         cer_flag: ['=', 1],
@@ -53,14 +53,15 @@ export const DynamicChartsSection = () => {
       },
       { schema_name: 'ds_11' },
       'ourRequest'
-    ).then((res: TSkillsUpEmployees) => {
+    ).then((res: TSkillsUpEmployeesWithCert) => {
+      // console.log({ res1: res });
       setHaveCertEmployees(res);
     });
 
     koobDataRequest3(
-      'etl_db_7.department_koob_1',
-      ['quarter'],
-      ['count(employee_id)'],
+      'etl_db_7.department_koob',
+      ['quarter', 'count(distinct(e_id))', 'avg(quantity_without_cer)'],
+      [],
       {
         y: ['=', currentYear],
         cer_flag: ['=', 0],
@@ -69,8 +70,10 @@ export const DynamicChartsSection = () => {
       },
       { schema_name: 'ds_11' },
       'ourRequest'
-    ).then((res2: TSkillsUpEmployees) => {
-      setHaventCertEmployees(res2);
+    ).then((res: TSkillsUpEmployeesWithoutCert) => {
+      // console.log({ res2: res });
+
+      setHaventCertEmployees(res);
     });
   }, [currentYear, currentDepartment, currentSkillType, currentGrade]);
 
@@ -86,8 +89,8 @@ export const DynamicChartsSection = () => {
 
   useEffect(() => {
     koobDataRequest3(
-      'etl_db_7.department_koob_1',
-      ['quarter', 'count(distinct(employee_id))', 'count(skill_id)'],
+      'etl_db_7.department_koob',
+      ['quarter', 'count(distinct(e_id))', 'count(skill_id)'],
       [],
       {
         y: ['=', currentYear],
@@ -102,8 +105,8 @@ export const DynamicChartsSection = () => {
     });
 
     koobDataRequest3(
-      'etl_db_7.department_koob_1',
-      ['quarter', 'count(distinct(employee_id))', 'count(skill_id)'],
+      'etl_db_7.department_koob',
+      ['quarter', 'count(distinct(e_id))', 'count(skill_id)'],
       [],
       {
         y: ['=', currentYear],
@@ -120,6 +123,7 @@ export const DynamicChartsSection = () => {
 
   useEffect(() => {
     const joinedAvgSkillsData = joinAvgSkills(avgSkillsWithCert, avgSkillsWithoutCert);
+
     setAvgSkillsChartData(joinedAvgSkillsData);
   }, [avgSkillsWithCert, avgSkillsWithoutCert]);
 
@@ -131,23 +135,23 @@ export const DynamicChartsSection = () => {
           <BarChart data={skillUpChartData}>
             <CartesianGrid vertical={false} strokeDasharray="5" stroke="#313359" />
             <XAxis
-              dataKey="name"
+              dataKey="quarter"
               tick={{ fill: '#fff', fontSize: '11px', fontWeight: 600 }}
               axisLine={false}
               tickLine={false}
             />
             <YAxis
               label={{ value: 'Процент повысивших', angle: -90, position: 'insideBottomLeft' }}
-              domain={[0, 100]}
+              domain={[0, 'auto']}
               tickFormatter={percentageFormatter}
               tick={{ fill: '#fff', fontSize: '12px' }}
               axisLine={false}
               tickLine={false}
             />
-            <Tooltip formatter={(value) => [`${value}%`, 'Процент']} />
-            {/* <Tooltip content={<CustomTooltip />} /> */}
-            <Bar dataKey="haventCert" className="haveCert" width={30} />
-            <Bar dataKey="haveCert" className="haventCert" width={30} />
+            {/* <Tooltip formatter={(value) => [`${value}%`, 'Процент']} /> */}
+            <Tooltip content={<CustomTooltip chartType="bar" />} />
+            <Bar dataKey="haveCert" className="haveCert" width={30} />
+            <Bar dataKey="haventCert" className="haventCert" width={30} />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -171,8 +175,8 @@ export const DynamicChartsSection = () => {
               axisLine={false}
               tickLine={false}
             />
-            <Tooltip />
-            {/* <Tooltip content={<CustomTooltip />} /> */}
+            {/* <Tooltip /> */}
+            <Tooltip content={<CustomTooltip chartType="line" />} />
             <Line type={'linear'} dataKey="withCert" className="haveCert" strokeWidth={3} dot={false} />
             <Line type={'linear'} dataKey="withoutCert" className="haventCert" strokeWidth={3} dot={false} />
           </LineChart>

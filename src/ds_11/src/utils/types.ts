@@ -9,6 +9,8 @@ export type TMappedData = {
   sort: number;
 }[];
 
-export type TSkillsUpEmployees = { quarter: string; employee_id: number }[];
+export type TSkillsUpEmployeesWithCert = { quarter: number; e_id: number; quantity_with_cer: number }[];
 
-export type TAvgSkills = { quarter: string; employee_id: number; skill_id: number }[];
+export type TSkillsUpEmployeesWithoutCert = { quarter: number; e_id: number; quantity_without_cer: number }[];
+
+export type TAvgSkills = { quarter: number; e_id: number; skill_id: number }[];

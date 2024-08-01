@@ -9,47 +9,52 @@ import { DynamicChartsSection } from '../../Components/DynamicChartsSection/Dyna
 import { getSelectOptionsFromFiltersData } from '../../utils/helpers';
 
 import { setDepartmentOptions, setSkillTypeOptions, setGradeOptions } from '../../reducers/filtersOptionsSlice';
-import { useAppDispatch } from '../../utils/hooks';
+import { useAppDispatch, useAppSelector } from '../../utils/hooks';
 export const DepartmentPage = () => {
   const dispatch = useAppDispatch();
 
+  const currentYear = useAppSelector((state) => state.currentFilters.year);
+
   useEffect(() => {
     koobDataRequest3(
-      'etl_db_7.department_koob_1',
+      'etl_db_7.department_koob',
       ['department'],
       [],
       {
-        y: ['=', 2022],
+        y: ['=', currentYear],
         data_type: ['=', 'актуальные']
       },
       { schema_name: 'ds_11' },
       'ourRequest'
     ).then((res) => {
       const departmentOptions = getSelectOptionsFromFiltersData(res, 'department');
+      console.log({ deptOpt: res });
+
       dispatch(setDepartmentOptions(departmentOptions));
     });
 
     koobDataRequest3(
-      'etl_db_7.department_koob_1',
+      'etl_db_7.department_koob',
       ['skill_type'],
       [],
       {
-        y: ['=', 2022],
+        y: ['=', currentYear],
         data_type: ['=', 'актуальные']
       },
       { schema_name: 'ds_11' },
       'ourRequest'
     ).then((res) => {
       const skillTypeOptions = getSelectOptionsFromFiltersData(res, 'skillType');
+      console.log({ skillsOPt: res });
       dispatch(setSkillTypeOptions(skillTypeOptions));
     });
 
     koobDataRequest3(
-      'etl_db_7.department_koob_1',
+      'etl_db_7.department_koob',
       ['grade_name'],
       [],
       {
-        y: ['=', 2022],
+        y: ['=', currentYear],
         data_type: ['=', 'актуальные']
       },
       { schema_name: 'ds_11' },

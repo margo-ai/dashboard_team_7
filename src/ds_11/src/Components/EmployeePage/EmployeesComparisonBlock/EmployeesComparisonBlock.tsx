@@ -89,6 +89,7 @@ export const EmployeesComparisonBlock = () => {
           return { ...item, skill: programFilter, mainSort: programSortMain, secondSort: 0 };
         }
       });
+      console.log({ dataWithoutSecond: newData });
 
       setRadarData(newData);
     } else {
@@ -145,6 +146,7 @@ export const EmployeesComparisonBlock = () => {
           return { ...item, secondSort: programSortSecond === undefined ? 0 : programSortSecond };
         }
       });
+      console.log({ dataWithSecondEmployee });
 
       setRadarData(dataWithSecondEmployee);
     }
@@ -194,7 +196,6 @@ export const EmployeesComparisonBlock = () => {
           <PolarRadiusAxis orientation="middle" angle={90} domain={[0, 500]} />
           <Radar name="Mike" dataKey="secondSort" stroke="#000B40" fill="#0083FB" fillOpacity={0.8} />
           <Radar name="Lily" dataKey="mainSort" stroke="#F765A3" fill="#FFA5CB" fillOpacity={0.6} />
-          {/* <Legend /> */}
         </RadarChart>
       </div>
       <div className="employeesComparisonBlock__filtersAndLegend">

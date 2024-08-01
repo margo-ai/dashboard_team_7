@@ -20,7 +20,7 @@ export const SkillsBarChart = () => {
 
   useEffect(() => {
     koobDataRequest3(
-      'etl_db_7.department_koob_1',
+      'etl_db_7.department_koob',
       ['skill_type', 'skill_id'],
       ['avg(sort)'],
       {
@@ -46,8 +46,8 @@ export const SkillsBarChart = () => {
 
   useEffect(() => {
     koobDataRequest3(
-      'etl_db_7.department_koob_1',
-      ['skill_id', 'skill_name', 'grade_name', 'count(distinct(employee_id))'],
+      'etl_db_7.department_koob',
+      ['skill_id', 'skill_name', 'grade_name', 'count(distinct(e_id))'],
       ['avg(sort)'],
       {
         y: ['=', currentYear],
