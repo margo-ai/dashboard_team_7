@@ -1,16 +1,17 @@
 @import '../../../../vars.scss';
 
-.dynamicGraphicsSection {
+.dynamicChartsSection {
   background-image: $backgroundGradient;
   border-radius: 60px;
   margin-top: 5px;
 
   padding: 0 54px 14px 60px;
   display: flex;
+  justify-content: space-between;
+  gap: 40px;
 
   &__filterAndLegend {
     width: 226px;
-    margin-left: auto;
     margin-top: 40px;
 
     .p-dropdown {

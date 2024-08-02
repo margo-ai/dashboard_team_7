@@ -3,14 +3,14 @@ import { Calendar } from 'primereact/calendar';
 
 import { minMaxDatesForCalendar } from '../../utils/constants';
 
-import './periodFilter.scss';
-
 import { setYearFilter } from '../../reducers/currentFiltersReducer';
-import { useAppDispatch, useAppSelector } from '../../utils/hooks';
+import { useAppDispatch } from '../../utils/hooks';
+
+import './periodFilter.scss';
 
 type Props = {
   year: Date;
-  setYear;
+  setYear: React.Dispatch<React.SetStateAction<Date>>;
 };
 
 export const PeriodFilter = ({ year, setYear }: Props) => {

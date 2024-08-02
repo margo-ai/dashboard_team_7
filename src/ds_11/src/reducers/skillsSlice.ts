@@ -1,13 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-
-type TSkillsData = {
-  skillType: string;
-  data: {
-    sort: number;
-    skill: string;
-    grade: string;
-  }[];
-};
+import { TSkillsData } from '../utils/types';
 
 type TSstate = {
   mainEmployeeSkills: TSkillsData[];

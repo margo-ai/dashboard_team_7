@@ -3,18 +3,18 @@ import { UrlState } from 'bi-internal/core';
 
 import { DepartmentIcon } from '../ui/iconsComponents/DepartmentIcon/DepartmentIcon';
 import { EmployeeIcon } from '../ui/iconsComponents/EmployeeIcon/EmployeeIcon';
-import { navigateToDboard } from '../../utils/helpers';
 
 import { setEmployeeData, setComparisonEmployeeData } from '../../reducers/employeesSlice';
+import { navigateToDboard } from '../../utils/helpers';
 import { useAppDispatch } from '../../utils/hooks';
 
 import './sidebarNav.scss';
 
 export const SidebarNav = () => {
+  const dispatch = useAppDispatch();
+
   const stateCharts = UrlState.getModel();
   const { dboard } = stateCharts;
-
-  const dispatch = useAppDispatch();
 
   const handleClickOnFirstDboard = () => {
     navigateToDboard('1');

@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
+import { CartesianGrid, ResponsiveContainer, XAxis, YAxis, BarChart, Bar, Tooltip } from 'recharts';
 import { KoobDataService } from 'bi-internal/services';
 const { koobDataRequest3 } = KoobDataService;
 
+import { createRequestFilters, fillMissingGrades, groupLowestSkillsData } from '../../utils/helpers';
+import { barChartColors } from '../../utils/constants';
+import { useAppSelector } from '../../utils/hooks';
+
 import './skillsBarChart.scss';
 
-import { useAppSelector } from '../../utils/hooks';
-import { createRequestFilters, groupLowestSkillsData } from '../../utils/helpers';
-import { CartesianGrid, ResponsiveContainer, XAxis, YAxis, BarChart, Bar, Tooltip } from 'recharts';
-import { barChartColors } from '../../utils/constants';
+import { TLowestSkills, TLowestSkillsIds } from '../../utils/types';
 
 export const SkillsBarChart = () => {
   const currentYear = useAppSelector((state) => state.currentFilters.year);
@@ -15,8 +17,8 @@ export const SkillsBarChart = () => {
   const currentSkillType = useAppSelector((state) => state.currentFilters.skillType);
   const currentGrade = useAppSelector((state) => state.currentFilters.grade);
 
-  const [skillIds, setSkillIds] = useState([]);
-  const [skillsBarChartData, setSkillsBarChartData] = useState([]);
+  const [skillIds, setSkillIds] = useState<TLowestSkillsIds>([]);
+  const [skillsBarChartData, setSkillsBarChartData] = useState<TLowestSkills>([]);
 
   useEffect(() => {
     koobDataRequest3(
@@ -33,6 +35,7 @@ export const SkillsBarChart = () => {
       'ourRequest'
     ).then((res) => {
       const skillsArray = res.filter((item) => item.sort !== 0);
+
       skillsArray.sort((a, b) => {
         const item_a = a.sort;
         const item_b = b.sort;
@@ -66,20 +69,6 @@ export const SkillsBarChart = () => {
       'ourRequest'
     ).then((res) => {
       const lowestSkillsData = groupLowestSkillsData(res, skillIds);
-
-      const fillMissingGrades = (data) => {
-        const requiredGrades = ['Novice', 'Junior', 'Middle', 'Senior', 'Expert', 'Использовал на проекте'];
-
-        return data.map((obj) => {
-          requiredGrades.forEach((grade) => {
-            if (!obj.hasOwnProperty(grade)) {
-              obj[grade] = 0;
-            }
-          });
-          return obj;
-        });
-      };
-
       const arrayWithAllGrades = fillMissingGrades(lowestSkillsData);
 
       setSkillsBarChartData(arrayWithAllGrades);
@@ -107,7 +96,6 @@ export const SkillsBarChart = () => {
               tickLine={false}
             />
             <Tooltip />
-            {/* <Tooltip content={<CustomTooltip />} /> */}
             <Bar dataKey="Использовал на проекте" fill={barChartColors[5]} width={15} />
             <Bar dataKey="Junior" fill={barChartColors[0]} width={15} />
             <Bar dataKey="Middle" fill={barChartColors[1]} width={15} />

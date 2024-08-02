@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
-import './filtersBlock.scss';
 import { PeriodFilter } from '../PeriodFilter/PeriodFilter';
 import { SeniorityFilter } from '../SeniorityFilter/SeniorityFilter';
 import { SelectFilters } from '../SelectFilters/SelectFilters';
@@ -8,8 +7,9 @@ import { SelectFiltersBlock } from '../SelectFiltersBlock/SelectFiltersBlock';
 import { ResetFiltersButton } from '../ui/ResetFiltersButton/ResetFiltersButton';
 
 import { useAppDispatch, useAppSelector } from '../../utils/hooks';
-
 import { setYearFilter, setSkillTypeFilter, setDeptFilter, setGradeFilter } from '../../reducers/currentFiltersReducer';
+
+import './filtersBlock.scss';
 
 export const FiltersBlock = () => {
   const [year, setYear] = useState(new Date('2023-01-01'));
@@ -24,7 +24,6 @@ export const FiltersBlock = () => {
 
   const handleResetButton = () => {
     setYear(new Date('2023-01-01'));
-
     dispatch(setYearFilter(2023));
     dispatch(setDeptFilter('Все подразделения'));
     dispatch(setSkillTypeFilter('Все типы навыков'));

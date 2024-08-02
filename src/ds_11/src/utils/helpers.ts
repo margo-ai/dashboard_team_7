@@ -1,5 +1,12 @@
 import { UrlState } from 'bi-internal/core';
-import { TMappedData } from './types';
+import {
+  TLowestSkills,
+  TLowestSkillsIds,
+  TMappedData,
+  TRadarChartData,
+  TSkillsUpEmployeesWithCert,
+  TSkillsUpEmployeesWithoutCert
+} from './types';
 
 export const navigateToDboard = (dboard: string) => {
   UrlState.navigate({ dboard });
@@ -115,9 +122,15 @@ const sortByOptionField = (fieldName) => {
   return (a, b) => (a[fieldName] > b[fieldName] ? 1 : -1);
 };
 
+interface IFiltersObject {
+  department?: string;
+  skill_type?: string;
+  grade_name?: string;
+}
+
 type TFilterType = 'department' | 'skillType' | 'grade';
 
-export const getSelectOptionsFromFiltersData = (filtersData, filterType: TFilterType) => {
+export const getSelectOptionsFromFiltersData = (filtersData: Array<IFiltersObject>, filterType: TFilterType) => {
   const selectOptions = filtersData.map((item) => {
     if (filterType === 'department') {
       return { name: item.department, value: item.department };
@@ -153,7 +166,7 @@ export const getSelectOptionsFromFiltersData = (filtersData, filterType: TFilter
       return { name: item.grade_name, value: item.grade_name };
     }
   });
-  console.log({ selectOptions });
+
   selectOptions.sort(sortByOptionField('name'));
 
   if (filterType === 'department') {
@@ -165,32 +178,6 @@ export const getSelectOptionsFromFiltersData = (filtersData, filterType: TFilter
   }
 
   return selectOptions;
-};
-
-export const getSortOfCurrentSkill = (
-  skillsData: TSkillsData,
-  currentSkillType: string,
-  currentSkillFilter: string
-) => {
-  const skillsArray = skillsData.filter((skills) => skills.skillType === currentSkillType);
-
-  let sort: number;
-
-  if (skillsArray.length !== 0) {
-    if (currentSkillFilter === skillsArray[0].skillType) {
-      sort = 0;
-    } else {
-      for (let i = 0; i < skillsArray.length; i++) {
-        for (let j = 0; j < skillsArray[i].data.length; j++) {
-          if (currentSkillFilter === skillsArray[i].data[j].skill) {
-            sort = skillsArray[i].data[j].sort;
-          }
-        }
-      }
-    }
-  }
-
-  return sort;
 };
 
 const fillMissingQuarters = (data) => {
@@ -210,18 +197,19 @@ const fillMissingQuarters = (data) => {
   return result;
 };
 
+export const percentageFormatter = (value: number) => {
+  return `${value}%`;
+};
+
 const sortByQuarter = (a, b) => {
   const quarterA = Number(a.quarter);
   const quarterB = Number(b.quarter);
   return quarterA - quarterB;
 };
 
-type TSkillsUpWithCert = { quarter: number; e_id: number; quantity_with_cer: number }[];
-type TSkillsUpWithOutCert = { quarter: number; e_id: number; quantity_without_cer: number }[];
-
 export const transformSkillsUpChartData = (
-  withCertEmployees: TSkillsUpWithCert,
-  withoutCertEmployees: TSkillsUpWithOutCert
+  withCertEmployees: TSkillsUpEmployeesWithCert,
+  withoutCertEmployees: TSkillsUpEmployeesWithoutCert
 ) => {
   withCertEmployees.sort(sortByQuarter);
 
@@ -308,7 +296,7 @@ export const joinAvgSkills = (dataWithCert: TAvgSkillsData, dataWithoutCert: TAv
   return joinedData;
 };
 
-export const groupLowestSkillsData = (data, skillIds) => {
+export const groupLowestSkillsData = (data: TLowestSkills, skillIds: TLowestSkillsIds) => {
   const chartData = [{}, {}, {}, {}, {}];
   for (let i = 0; i < data.length; i++) {
     if (data[i].skill_id === skillIds[0]) {
@@ -347,6 +335,19 @@ export const groupLowestSkillsData = (data, skillIds) => {
   return chartData;
 };
 
+export const fillMissingGrades = (data) => {
+  const requiredGrades = ['Novice', 'Junior', 'Middle', 'Senior', 'Expert', 'Использовал на проекте'];
+
+  return data.map((obj) => {
+    requiredGrades.forEach((grade) => {
+      if (!obj.hasOwnProperty(grade)) {
+        obj[grade] = 0;
+      }
+    });
+    return obj;
+  });
+};
+
 type TRequestFilters = { department: string; skillType: string; grade?: string };
 
 export const createRequestFilters = ({ department, skillType, grade }: TRequestFilters) => {
@@ -380,4 +381,190 @@ export const createRequestFilters = ({ department, skillType, grade }: TRequestF
   }
 
   return filtersArray;
+};
+
+export const changeFirstLetterToUpperCase = (str: string) => {
+  return str[0].toUpperCase() + str.slice(1);
+};
+
+const getSortOfCurrentSkill = (skillsData: TSkillsData, currentSkillType: string, currentSkillFilter: string) => {
+  const skillsArray = skillsData.filter((skills) => skills.skillType === currentSkillType);
+
+  let sort: number;
+
+  if (skillsArray.length !== 0) {
+    if (currentSkillFilter === skillsArray[0].skillType) {
+      sort = 0;
+    } else {
+      for (let i = 0; i < skillsArray.length; i++) {
+        for (let j = 0; j < skillsArray[i].data.length; j++) {
+          if (currentSkillFilter === skillsArray[i].data[j].skill) {
+            sort = skillsArray[i].data[j].sort;
+          }
+        }
+      }
+    }
+  }
+
+  return sort;
+};
+
+const createSortsArray = (
+  skillsData,
+  progLangFilter,
+  dbmsFilter,
+  swTFilter,
+  frameworkFilter,
+  platformFilter,
+  toolFilter,
+  programFilter
+) => {
+  const langSort = getSortOfCurrentSkill(skillsData, 'Языки программирования', progLangFilter);
+  const dbmsSort = getSortOfCurrentSkill(skillsData, 'Базы данных', dbmsFilter);
+  const swTSort = getSortOfCurrentSkill(skillsData, 'Типы систем', swTFilter);
+  const frameworkSort = getSortOfCurrentSkill(skillsData, 'Фреймворки', frameworkFilter);
+  const platformSort = getSortOfCurrentSkill(skillsData, 'Платформы', platformFilter);
+  const toolSort = getSortOfCurrentSkill(skillsData, 'Технологии', toolFilter);
+  const programSort = getSortOfCurrentSkill(skillsData, 'Инструменты', programFilter);
+
+  return [langSort, dbmsSort, swTSort, frameworkSort, platformSort, toolSort, programSort];
+};
+
+type TRadarChart = {
+  mainEmployeeSkillsData: TSkillsData;
+  secondEmployeeSkillsData?: TSkillsData;
+  currentRadarChartData: TRadarChartData;
+
+  progLangFilter: string;
+  dbmsFilter: string;
+  swTFilter: string;
+  frameworkFilter: string;
+  platformFilter: string;
+  toolFilter: string;
+  programFilter: string;
+};
+export const buildRadarChartData = ({
+  mainEmployeeSkillsData,
+  secondEmployeeSkillsData,
+  currentRadarChartData,
+  progLangFilter,
+  dbmsFilter,
+  swTFilter,
+  frameworkFilter,
+  platformFilter,
+  toolFilter,
+  programFilter
+}: TRadarChart) => {
+  if (secondEmployeeSkillsData.length === 0) {
+    const mainEmployeeSorts = createSortsArray(
+      mainEmployeeSkillsData,
+      progLangFilter,
+      dbmsFilter,
+      swTFilter,
+      frameworkFilter,
+      platformFilter,
+      toolFilter,
+      programFilter
+    );
+    const dataWithoutSecondEmployee = currentRadarChartData.map((item) => {
+      if (item.type === 'Языки программирования') {
+        return { ...item, skill: progLangFilter, mainSort: mainEmployeeSorts[0], secondSort: 0 };
+      } else if (item.type === 'Базы данных') {
+        return { ...item, skill: dbmsFilter, mainSort: mainEmployeeSorts[1], secondSort: 0 };
+      } else if (item.type === 'Типы систем') {
+        return { ...item, skill: swTFilter, mainSort: mainEmployeeSorts[2], secondSort: 0 };
+      } else if (item.type === 'Фреймворки') {
+        return { ...item, skill: frameworkFilter, mainSort: mainEmployeeSorts[3], secondSort: 0 };
+      } else if (item.type === 'Платформы') {
+        return { ...item, skill: platformFilter, mainSort: mainEmployeeSorts[4], secondSort: 0 };
+      } else if (item.type === 'Технологии') {
+        return { ...item, skill: toolFilter, mainSort: mainEmployeeSorts[5], secondSort: 0 };
+      } else if (item.type === 'Инструменты') {
+        return { ...item, skill: programFilter, mainSort: mainEmployeeSorts[6], secondSort: 0 };
+      }
+    });
+
+    const formattedSkills = dataWithoutSecondEmployee.map((skill, index) => {
+      const duplicates = dataWithoutSecondEmployee.filter((s) => s.skill === skill.skill && s.type !== skill.type);
+      if (duplicates.length > 0) {
+        dataWithoutSecondEmployee[index].skill = `${skill.skill} (${skill.type})`;
+        return skill;
+      } else {
+        return skill;
+      }
+    });
+
+    return formattedSkills;
+  } else {
+    const mainEmployeeSorts = createSortsArray(
+      mainEmployeeSkillsData,
+      progLangFilter,
+      dbmsFilter,
+      swTFilter,
+      frameworkFilter,
+      platformFilter,
+      toolFilter,
+      programFilter
+    );
+    const dataWithoutSecondEmployee = currentRadarChartData.map((item) => {
+      if (item.type === 'Языки программирования') {
+        return { ...item, skill: progLangFilter, mainSort: mainEmployeeSorts[0] };
+      } else if (item.type === 'Базы данных') {
+        return { ...item, skill: dbmsFilter, mainSort: mainEmployeeSorts[1] };
+      } else if (item.type === 'Типы систем') {
+        return { ...item, skill: swTFilter, mainSort: mainEmployeeSorts[2] };
+      } else if (item.type === 'Фреймворки') {
+        return { ...item, skill: frameworkFilter, mainSort: mainEmployeeSorts[3] };
+      } else if (item.type === 'Платформы') {
+        return { ...item, skill: platformFilter, mainSort: mainEmployeeSorts[4] };
+      } else if (item.type === 'Технологии') {
+        return { ...item, skill: toolFilter, mainSort: mainEmployeeSorts[5] };
+      } else if (item.type === 'Инструменты') {
+        return { ...item, skill: programFilter, mainSort: mainEmployeeSorts[6] };
+      }
+    });
+
+    const secondEmployeeSorts = createSortsArray(
+      secondEmployeeSkillsData,
+      progLangFilter,
+      dbmsFilter,
+      swTFilter,
+      frameworkFilter,
+      platformFilter,
+      toolFilter,
+      programFilter
+    );
+
+    let dataWithSecondEmployee;
+
+    dataWithSecondEmployee = dataWithoutSecondEmployee.map((item) => {
+      if (item.type === 'Языки программирования') {
+        return { ...item, secondSort: secondEmployeeSorts[0] === undefined ? 0 : secondEmployeeSorts[0] };
+      } else if (item.type === 'Базы данных') {
+        return { ...item, secondSort: secondEmployeeSorts[1] === undefined ? 0 : secondEmployeeSorts[1] };
+      } else if (item.type === 'Типы систем') {
+        return { ...item, secondSort: secondEmployeeSorts[2] === undefined ? 0 : secondEmployeeSorts[2] };
+      } else if (item.type === 'Фреймворки') {
+        return { ...item, secondSort: secondEmployeeSorts[3] === undefined ? 0 : secondEmployeeSorts[3] };
+      } else if (item.type === 'Платформы') {
+        return { ...item, secondSort: secondEmployeeSorts[4] === undefined ? 0 : secondEmployeeSorts[4] };
+      } else if (item.type === 'Технологии') {
+        return { ...item, secondSort: secondEmployeeSorts[5] === undefined ? 0 : secondEmployeeSorts[5] };
+      } else if (item.type === 'Инструменты') {
+        return { ...item, secondSort: secondEmployeeSorts[6] === undefined ? 0 : secondEmployeeSorts[6] };
+      }
+    });
+
+    const formattedSkills = dataWithSecondEmployee.map((skill, index) => {
+      const duplicates = dataWithSecondEmployee.filter((s) => s.skill === skill.skill && s.type !== skill.type);
+      if (duplicates.length > 0) {
+        dataWithSecondEmployee[index].skill = `${skill.skill} (${skill.type})`;
+        return skill;
+      } else {
+        return skill;
+      }
+    });
+
+    return formattedSkills;
+  }
 };

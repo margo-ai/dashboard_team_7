@@ -1,18 +1,19 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { ActionCreatorWithPayload } from '@reduxjs/toolkit';
 import { Dropdown } from 'primereact/dropdown';
+
 import { DropdownIcon } from '../ui/iconsComponents/DropdownIcon/DropdownIcon';
 import { DropdownUpIcon } from '../ui/iconsComponents/DropdownUpIcon/DropdownUpIcon';
 
-import './selectFilters.scss';
-import { ActionCreatorWithPayload } from '@reduxjs/toolkit';
+import { useAppDispatch } from '../../utils/hooks';
 
-import { useAppDispatch, useAppSelector } from '../../utils/hooks';
+import './selectFilters.scss';
 
 type Props = {
   options: { name: string; value: string }[];
   setSelectedFilter: ActionCreatorWithPayload<any, string>;
   placeholder?: string;
-  selectedFilter;
+  selectedFilter: string;
 };
 
 export const SelectFilters = ({ options, setSelectedFilter, selectedFilter }: Props) => {
@@ -37,7 +38,6 @@ export const SelectFilters = ({ options, setSelectedFilter, selectedFilter }: Pr
         onChange={(e) => setSelectedOption(e.value)}
         options={options}
         optionLabel="name"
-        // placeholder={placeholder}
         dropdownIcon={(opts) => {
           return opts.iconProps['data-pr-overlay-visible'] ? <DropdownUpIcon /> : <DropdownIcon />;
         }}

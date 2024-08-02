@@ -1,20 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
-import { useAppDispatch, useAppSelector } from '../../../utils/hooks';
-
-import './skillsSection.scss';
 import { EmployeeInfoTitle } from '../EmployeeInfoTitle/EmployeeInfoTitle';
 import { SkillsTitleIcon } from '../../ui/iconsComponents/SkillsTitleIcon/SkillsTitleIcon';
 import { BigDownArrowIcon } from '../../ui/iconsComponents/BigDownArrowIcon/BigDownArrowIcon';
 import { BigUpArrowIcon } from '../../ui/iconsComponents/BigUpArrowIcon/BigUpArrowIcon';
 
+import { useAppSelector } from '../../../utils/hooks';
+
+import './skillsSection.scss';
+
 export const SkillsSection = () => {
   const employeeData = useAppSelector((state) => state.employee.employeeData);
   const skillsData = useAppSelector((state) => state.skills.mainEmployeeSkills);
 
-  const [activeTab, setActiveTab] = useState(null);
+  const [activeTab, setActiveTab] = useState<string>(null);
 
-  const handleTabClick = (tabName) => {
+  const handleTabClick = (tabName: string) => {
     setActiveTab(activeTab === tabName ? null : tabName);
   };
 

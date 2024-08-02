@@ -2,20 +2,19 @@ import React, { useEffect, useState } from 'react';
 import { KoobDataService } from 'bi-internal/services';
 const { koobDataRequest3 } = KoobDataService;
 
-import './infoBlock.scss';
-import { EmployeesCountIcon } from '../ui/iconsComponents/EmployeesCountIcon/EmployeesCountIcon';
 import { CertificatesStatistickBlock } from '../CertificatesStatisticBlock/CertificatesStatistickBlock';
 import { CertificateIcon } from '../ui/iconsComponents/CertificateIcon/CertificateIcon';
 import { CircleIcon } from '../ui/iconsComponents/CircleIcon/CircleIcon';
+
 import { useAppSelector } from '../../utils/hooks';
 import { createRequestFilters } from '../../utils/helpers';
+
+import './infoBlock.scss';
 
 export const InfoBlock = () => {
   const currentYear = useAppSelector((state) => state.currentFilters.year);
   const currentDepartment = useAppSelector((state) => state.currentFilters.department);
   const currentSkillType = useAppSelector((state) => state.currentFilters.skillType);
-
-  const [employeesCount, setEmployeesCount] = useState<number>(0);
 
   const [currentYearSkills, setCurrentYearSkills] = useState(0);
   const [lastYearSkills, setLastYearSkills] = useState(0);
@@ -27,20 +26,6 @@ export const InfoBlock = () => {
   const [employeesUpgrade, setEmployeesUpgrade] = useState([]);
 
   useEffect(() => {
-    koobDataRequest3(
-      'etl_db_7.department_koob',
-      ['count(distinct(e_id))'],
-      [],
-      {
-        y: ['=', currentYear],
-        quarter: ['=', '4']
-      },
-      { schema_name: 'ds_11' },
-      'ourRequest'
-    ).then((res) => {
-      setEmployeesCount(res[0].e_id);
-    });
-
     koobDataRequest3(
       'etl_db_7.department_koob',
       ['count(skill_id)'],
@@ -116,15 +101,6 @@ export const InfoBlock = () => {
 
   return (
     <div className="infoBlock">
-      {/* <div className="employeesCountBlock">
-        <div className="employeesCountBlock__icon">
-          <EmployeesCountIcon />
-        </div>
-        <div className="employeesCountBlock__details">
-          <div className="employeesCountBlock__count">{!!employeesCount ? employeesCount : 0}</div>
-          <div className="employeesCountBlock__title">сотрудников</div>
-        </div>
-      </div> */}
       <div className="statisticBlock">
         {skillsUpgrade.length !== 0 && (
           <CertificatesStatistickBlock count={skillsUpgrade[0]} percent={skillsUpgrade[1]} title="повышение грейдов">

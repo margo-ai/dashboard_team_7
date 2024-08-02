@@ -2,14 +2,17 @@ import React, { useEffect } from 'react';
 import { KoobDataService } from 'bi-internal/services';
 const { koobDataRequest3 } = KoobDataService;
 
-import './departmentPage.scss';
 import { FiltersBlock } from '../../Components/FiltersBlock/FiltersBlock';
 import { MainDepartmentSection } from '../../Components/MainDepartmentSection/MainDepartmentSection';
 import { DynamicChartsSection } from '../../Components/DynamicChartsSection/DynamicChartsSection';
+
 import { getSelectOptionsFromFiltersData } from '../../utils/helpers';
 
 import { setDepartmentOptions, setSkillTypeOptions, setGradeOptions } from '../../reducers/filtersOptionsSlice';
 import { useAppDispatch, useAppSelector } from '../../utils/hooks';
+
+import './departmentPage.scss';
+
 export const DepartmentPage = () => {
   const dispatch = useAppDispatch();
 
@@ -28,8 +31,6 @@ export const DepartmentPage = () => {
       'ourRequest'
     ).then((res) => {
       const departmentOptions = getSelectOptionsFromFiltersData(res, 'department');
-      console.log({ deptOpt: res });
-
       dispatch(setDepartmentOptions(departmentOptions));
     });
 
@@ -45,7 +46,6 @@ export const DepartmentPage = () => {
       'ourRequest'
     ).then((res) => {
       const skillTypeOptions = getSelectOptionsFromFiltersData(res, 'skillType');
-      console.log({ skillsOPt: res });
       dispatch(setSkillTypeOptions(skillTypeOptions));
     });
 

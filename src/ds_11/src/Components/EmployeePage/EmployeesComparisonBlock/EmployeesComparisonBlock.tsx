@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from 'recharts';
+import { KoobDataService } from 'bi-internal/services';
+const { koobDataRequest3 } = KoobDataService;
 
-import './employeesComparisonBlock.scss';
 import { SearchInput } from '../../ui/SearchInput/SearchInput';
+import { SelectFiltersBlock } from '../../SelectFiltersBlock/SelectFiltersBlock';
+import { SelectFilters } from '../../SelectFilters/SelectFilters';
+import { ResetFiltersButton } from '../../ui/ResetFiltersButton/ResetFiltersButton';
 
 import { useAppDispatch, useAppSelector } from '../../../utils/hooks';
 
@@ -15,19 +20,32 @@ import {
   setSwT,
   setTool
 } from '../../../reducers/comparisonFiltersSlice';
-
-import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, Legend, ResponsiveContainer } from 'recharts';
-import { SelectFiltersBlock } from '../../SelectFiltersBlock/SelectFiltersBlock';
-import { SelectFilters } from '../../SelectFilters/SelectFilters';
-import { getSelectOptionsFromSkillsData, getSortOfCurrentSkill, sortSkillsArray } from '../../../utils/helpers';
+import {
+  buildRadarChartData,
+  changeFirstLetterToUpperCase,
+  getSelectOptionsFromSkillsData,
+  sortSkillsArray
+} from '../../../utils/helpers';
 import { setComparisonEmployeeSkills } from '../../../reducers/skillsSlice';
-import { ResetFiltersButton } from '../../ui/ResetFiltersButton/ResetFiltersButton';
+
+import './employeesComparisonBlock.scss';
+import { TRadarChartData } from '../../../utils/types';
 
 export const EmployeesComparisonBlock = () => {
   const dispatch = useAppDispatch();
 
   const employeeData = useAppSelector((state) => state.employee.employeeData);
   const comparisonEmployeeData = useAppSelector((state) => state.employee.comparisonEmployeeData);
+
+  const [searchTerm, setSearchTerm] = useState('');
+  const [error, setError] = useState(false);
+  const [errorText, setErrorText] = useState<string>('');
+
+  const handleSearchChange = (e) => {
+    setError(false);
+    setErrorText('');
+    setSearchTerm(e.target.value);
+  };
 
   const [filtersOptions, setFiltersOptions] = useState([]);
 
@@ -42,7 +60,7 @@ export const EmployeesComparisonBlock = () => {
   const mainEmployeeSkillsData = useAppSelector((state) => state.skills.mainEmployeeSkills);
   const secondEmployeeSkillsData = useAppSelector((state) => state.skills.comparisonEmployeeSkills);
 
-  const [radarData, setRadarData] = useState([]);
+  const [radarData, setRadarData] = useState<TRadarChartData>([]);
 
   useEffect(() => {
     if (mainEmployeeSkillsData.length !== 0) {
@@ -63,93 +81,20 @@ export const EmployeesComparisonBlock = () => {
   }, [mainEmployeeSkillsData]);
 
   useEffect(() => {
-    if (secondEmployeeSkillsData.length === 0) {
-      const langSortMain = getSortOfCurrentSkill(mainEmployeeSkillsData, 'Языки программирования', progLangFilter);
-      const dbmsSortMain = getSortOfCurrentSkill(mainEmployeeSkillsData, 'Базы данных', dbmsFilter);
-      const swTSortMain = getSortOfCurrentSkill(mainEmployeeSkillsData, 'Типы систем', swTFilter);
-      const frameworkSortMain = getSortOfCurrentSkill(mainEmployeeSkillsData, 'Фреймворки', frameworkFilter);
-      const platformSortMain = getSortOfCurrentSkill(mainEmployeeSkillsData, 'Платформы', platformFilter);
-      const toolSortMain = getSortOfCurrentSkill(mainEmployeeSkillsData, 'Технологии', toolFilter);
-      const programSortMain = getSortOfCurrentSkill(mainEmployeeSkillsData, 'Инструменты', programFilter);
+    const currentRadarData = buildRadarChartData({
+      mainEmployeeSkillsData: mainEmployeeSkillsData,
+      secondEmployeeSkillsData: secondEmployeeSkillsData,
+      currentRadarChartData: radarData,
+      progLangFilter,
+      dbmsFilter,
+      swTFilter,
+      frameworkFilter,
+      platformFilter,
+      toolFilter,
+      programFilter
+    });
 
-      const newData = radarData.map((item) => {
-        if (item.type === 'Языки программирования') {
-          return { ...item, skill: progLangFilter, mainSort: langSortMain, secondSort: 0 };
-        } else if (item.type === 'Базы данных') {
-          return { ...item, skill: dbmsFilter, mainSort: dbmsSortMain, secondSort: 0 };
-        } else if (item.type === 'Типы систем') {
-          return { ...item, skill: swTFilter, mainSort: swTSortMain, secondSort: 0 };
-        } else if (item.type === 'Фреймворки') {
-          return { ...item, skill: frameworkFilter, mainSort: frameworkSortMain, secondSort: 0 };
-        } else if (item.type === 'Платформы') {
-          return { ...item, skill: platformFilter, mainSort: platformSortMain, secondSort: 0 };
-        } else if (item.type === 'Технологии') {
-          return { ...item, skill: toolFilter, mainSort: toolSortMain, secondSort: 0 };
-        } else if (item.type === 'Инструменты') {
-          return { ...item, skill: programFilter, mainSort: programSortMain, secondSort: 0 };
-        }
-      });
-      console.log({ dataWithoutSecond: newData });
-
-      setRadarData(newData);
-    } else {
-      const langSortMain = getSortOfCurrentSkill(mainEmployeeSkillsData, 'Языки программирования', progLangFilter);
-      const dbmsSortMain = getSortOfCurrentSkill(mainEmployeeSkillsData, 'Базы данных', dbmsFilter);
-      const swTSortMain = getSortOfCurrentSkill(mainEmployeeSkillsData, 'Типы систем', swTFilter);
-      const frameworkSortMain = getSortOfCurrentSkill(mainEmployeeSkillsData, 'Фреймворки', frameworkFilter);
-      const platformSortMain = getSortOfCurrentSkill(mainEmployeeSkillsData, 'Платформы', platformFilter);
-      const toolSortMain = getSortOfCurrentSkill(mainEmployeeSkillsData, 'Технологии', toolFilter);
-      const programSortMain = getSortOfCurrentSkill(mainEmployeeSkillsData, 'Инструменты', programFilter);
-
-      const newData = radarData.map((item) => {
-        if (item.type === 'Языки программирования') {
-          return { ...item, skill: progLangFilter, mainSort: langSortMain };
-        } else if (item.type === 'Базы данных') {
-          return { ...item, skill: dbmsFilter, mainSort: dbmsSortMain };
-        } else if (item.type === 'Типы систем') {
-          return { ...item, skill: swTFilter, mainSort: swTSortMain };
-        } else if (item.type === 'Фреймворки') {
-          return { ...item, skill: frameworkFilter, mainSort: frameworkSortMain };
-        } else if (item.type === 'Платформы') {
-          return { ...item, skill: platformFilter, mainSort: platformSortMain };
-        } else if (item.type === 'Технологии') {
-          return { ...item, skill: toolFilter, mainSort: toolSortMain };
-        } else if (item.type === 'Инструменты') {
-          return { ...item, skill: programFilter, mainSort: programSortMain };
-        }
-      });
-
-      const langSortSecond = getSortOfCurrentSkill(secondEmployeeSkillsData, 'Языки программирования', progLangFilter);
-      const dbmsSortSecond = getSortOfCurrentSkill(secondEmployeeSkillsData, 'Базы данных', dbmsFilter);
-      const swTSortSecond = getSortOfCurrentSkill(secondEmployeeSkillsData, 'Типы систем', swTFilter);
-      const frameworkSortSecond = getSortOfCurrentSkill(secondEmployeeSkillsData, 'Фреймворки', frameworkFilter);
-      const platformSortSecond = getSortOfCurrentSkill(secondEmployeeSkillsData, 'Платформы', platformFilter);
-      const toolSortSecond = getSortOfCurrentSkill(secondEmployeeSkillsData, 'Технологии', toolFilter);
-      const programSortSecond = getSortOfCurrentSkill(secondEmployeeSkillsData, 'Инструменты', programFilter);
-
-      let dataWithSecondEmployee;
-
-      dataWithSecondEmployee = newData.map((item) => {
-        if (item.type === 'Языки программирования') {
-          return { ...item, secondSort: langSortSecond === undefined ? 0 : langSortSecond };
-        } else if (item.type === 'Базы данных') {
-          return { ...item, secondSort: dbmsSortSecond === undefined ? 0 : dbmsSortSecond };
-        } else if (item.type === 'Типы систем') {
-          return { ...item, secondSort: swTSortSecond === undefined ? 0 : swTSortSecond };
-        } else if (item.type === 'Фреймворки') {
-          return { ...item, secondSort: frameworkSortSecond === undefined ? 0 : frameworkSortSecond };
-        } else if (item.type === 'Платформы') {
-          return { ...item, secondSort: platformSortSecond === undefined ? 0 : platformSortSecond };
-        } else if (item.type === 'Технологии') {
-          return { ...item, secondSort: toolSortSecond === undefined ? 0 : toolSortSecond };
-        } else if (item.type === 'Инструменты') {
-          return { ...item, secondSort: programSortSecond === undefined ? 0 : programSortSecond };
-        }
-      });
-      console.log({ dataWithSecondEmployee });
-
-      setRadarData(dataWithSecondEmployee);
-    }
+    setRadarData(currentRadarData);
   }, [
     progLangFilter,
     dbmsFilter,
@@ -171,13 +116,54 @@ export const EmployeesComparisonBlock = () => {
     dispatch(setProgram('Инструменты'));
   };
 
-  const setDataFunc = (mappedData) => {
-    dispatch(setComparisonEmployeeData(mappedData));
-    const sortedSkills = sortSkillsArray(mappedData);
-    dispatch(setComparisonEmployeeSkills(sortedSkills));
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const searchName = searchTerm.trim().split(' ');
+
+    if (searchName.length === 1) {
+      setError(true);
+      setErrorText('Введите имя и фамилию');
+    } else {
+      koobDataRequest3(
+        'etl_db_7.employee_koob',
+        ['name', 'surname', 'skill_name', 'skill_type', 'email', 'department', 'position', 'grade', 'sort', 'e_id'],
+        [],
+        {
+          surname: ['=', changeFirstLetterToUpperCase(searchName[1])],
+          name: ['=', changeFirstLetterToUpperCase(searchName[0])],
+          highest_grade: ['=', '1']
+        },
+        { schema_name: 'ds_11' },
+        'ourRequest'
+      ).then((res) => {
+        if (res.length === 0) {
+          setError(true);
+          setErrorText('Сотрудник не найден');
+        } else {
+          const mappedData = res.map((el, i) => {
+            return {
+              name: `${el.name} ${el.surname}`,
+              email: el.email,
+              department: el.department,
+              position: el.position,
+              skillType: el.skill_type,
+              skillName: el.skill_name,
+              sort: el.sort,
+              skillGrade: el.grade,
+              employeeId: el.e_id
+            };
+          });
+
+          dispatch(setComparisonEmployeeData(mappedData));
+          const sortedSkills = sortSkillsArray(mappedData);
+          dispatch(setComparisonEmployeeSkills(sortedSkills));
+        }
+      });
+    }
   };
 
-  const handleClearFunc = (setSearchTerm) => {
+  const handleClearFunc = () => {
     setSearchTerm('');
     dispatch(setComparisonEmployeeData([]));
     dispatch(setComparisonEmployeeSkills([]));
@@ -185,7 +171,14 @@ export const EmployeesComparisonBlock = () => {
 
   return (
     <div className="employeesComparisonBlock">
-      <SearchInput setDataFunc={setDataFunc} handleClearFunc={handleClearFunc} />
+      <SearchInput
+        handleSubmit={handleSubmit}
+        searchTerm={searchTerm}
+        onChange={handleSearchChange}
+        handleClearFunc={handleClearFunc}
+        error={error}
+        errorText={errorText}
+      />
       {comparisonEmployeeData.length !== 0 ? (
         <div className="employeesComparisonBlock__name">{comparisonEmployeeData[0].name}</div>
       ) : null}

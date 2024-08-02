@@ -1,16 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-
-type TEmployee = {
-  department: string;
-  email: string;
-  gradeLevelEexp: string;
-  name: string;
-  position: string;
-  skill: string;
-  skillDetail: string;
-  sort: number;
-  employeeId: number;
-}[];
+import { TEmployee } from '../utils/types';
 
 type TState = {
   employeeData: TEmployee;

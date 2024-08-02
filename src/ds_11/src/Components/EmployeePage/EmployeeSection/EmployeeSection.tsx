@@ -5,14 +5,12 @@ const { koobDataRequest3 } = KoobDataService;
 import { SearchInput } from '../../ui/SearchInput/SearchInput';
 import { EmployeeInfoTitle } from '../EmployeeInfoTitle/EmployeeInfoTitle';
 import { EmployeeTitleIcon } from '../../ui/iconsComponents/EmployeeTitleIcon/EmployeeTitleIcon';
+import { CertificateIcon } from '../../ui/iconsComponents/CertificateIcon/CertificateIcon';
 
 import { useAppDispatch, useAppSelector } from '../../../utils/hooks';
-
-import './employeeSection.scss';
 import { setComparisonEmployeeData, setEmployeeData } from '../../../reducers/employeesSlice';
-import { sortSkillsArray } from '../../../utils/helpers';
+import { changeFirstLetterToUpperCase, sortSkillsArray } from '../../../utils/helpers';
 import { setComparisonEmployeeSkills, setEmployeeSkills } from '../../../reducers/skillsSlice';
-
 import {
   setProgLang,
   setDbms,
@@ -23,7 +21,7 @@ import {
   setTool
 } from '../../../reducers/comparisonFiltersSlice';
 
-import { CertificateIcon } from '../../ui/iconsComponents/CertificateIcon/CertificateIcon';
+import './employeeSection.scss';
 
 export const EmployeeSection = () => {
   const dispatch = useAppDispatch();
@@ -31,6 +29,81 @@ export const EmployeeSection = () => {
   const [employeeRank, setEmployeeRank] = useState<number>(null);
 
   const employeeData = useAppSelector((state) => state.employee.employeeData);
+
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [error, setError] = useState(false);
+  const [errorText, setErrorText] = useState<string>('');
+
+  const handleSearchChange = (e) => {
+    setError(false);
+    setErrorText('');
+    setSearchTerm(e.target.value);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const searchName = searchTerm.trim().split(' ');
+
+    if (searchName.length === 1) {
+      setError(true);
+      setErrorText('Введите имя и фамилию');
+    } else {
+      koobDataRequest3(
+        'etl_db_7.employee_koob',
+        ['name', 'surname', 'skill_name', 'skill_type', 'email', 'department', 'position', 'grade', 'sort', 'e_id'],
+        [],
+        {
+          surname: ['=', changeFirstLetterToUpperCase(searchName[1])],
+          name: ['=', changeFirstLetterToUpperCase(searchName[0])],
+          highest_grade: ['=', '1']
+        },
+        { schema_name: 'ds_11' },
+        'ourRequest'
+      ).then((res) => {
+        if (res.length === 0) {
+          setError(true);
+          setErrorText('Сотрудник не найден');
+        } else {
+          const mappedData = res.map((el, i) => {
+            return {
+              name: `${el.name} ${el.surname}`,
+              email: el.email,
+              department: el.department,
+              position: el.position,
+              skillType: el.skill_type,
+              skillName: el.skill_name,
+              sort: el.sort,
+              skillGrade: el.grade,
+              employeeId: el.e_id
+            };
+          });
+
+          dispatch(setEmployeeData(mappedData));
+          const sortedSkills = sortSkillsArray(mappedData);
+          dispatch(setEmployeeSkills(sortedSkills));
+        }
+      });
+    }
+  };
+
+  const handleClearFunc = () => {
+    setError(false);
+    setErrorText('');
+    setSearchTerm('');
+    dispatch(setEmployeeData([]));
+    dispatch(setComparisonEmployeeData([]));
+    dispatch(setEmployeeSkills([]));
+    dispatch(setComparisonEmployeeSkills([]));
+
+    dispatch(setProgLang('Языки программирования'));
+    dispatch(setDbms('Базы данных'));
+    dispatch(setSwT('Типы систем'));
+    dispatch(setFramework('Фреймворки'));
+    dispatch(setPlatform('Платформы'));
+    dispatch(setTool('Технологии'));
+    dispatch(setProgram('Инструменты'));
+  };
 
   useEffect(() => {
     if (employeeData.length !== 0) {
@@ -49,33 +122,16 @@ export const EmployeeSection = () => {
     console.log({ employeeData });
   }, [employeeData]);
 
-  const setDataFunc = (mappedData) => {
-    // localStorage.setItem('employee', mappedData[0].name);
-
-    dispatch(setEmployeeData(mappedData));
-    const sortedSkills = sortSkillsArray(mappedData);
-    dispatch(setEmployeeSkills(sortedSkills));
-  };
-
-  const handleClearFunc = (setSearchTerm) => {
-    setSearchTerm('');
-    dispatch(setEmployeeData([]));
-    dispatch(setComparisonEmployeeData([]));
-    dispatch(setEmployeeSkills([]));
-    dispatch(setComparisonEmployeeSkills([]));
-
-    dispatch(setProgLang('Языки программирования'));
-    dispatch(setDbms('Базы данных'));
-    dispatch(setSwT('Типы систем'));
-    dispatch(setFramework('Фреймворки'));
-    dispatch(setPlatform('Платформы'));
-    dispatch(setTool('Технологии'));
-    dispatch(setProgram('Инструменты'));
-  };
-
   return (
     <section className="employeeSection">
-      <SearchInput setDataFunc={setDataFunc} handleClearFunc={handleClearFunc} />
+      <SearchInput
+        handleSubmit={handleSubmit}
+        searchTerm={searchTerm}
+        onChange={handleSearchChange}
+        handleClearFunc={handleClearFunc}
+        error={error}
+        errorText={errorText}
+      />
       <div className="employeeSection__info">
         <EmployeeInfoTitle title="Сотрудник" width={271}>
           <EmployeeTitleIcon />

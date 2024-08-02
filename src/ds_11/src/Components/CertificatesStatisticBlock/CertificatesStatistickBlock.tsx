@@ -1,7 +1,6 @@
 import React from 'react';
 
 import './certificatesStatisticBlock.scss';
-import { CertificateIcon } from '../ui/iconsComponents/CertificateIcon/CertificateIcon';
 
 type Props = {
   count: number;
