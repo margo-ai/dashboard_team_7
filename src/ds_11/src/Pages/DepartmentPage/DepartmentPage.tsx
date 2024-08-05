@@ -1,14 +1,12 @@
 import React, { useEffect } from 'react';
-import { KoobDataService } from 'bi-internal/services';
-const { koobDataRequest3 } = KoobDataService;
 
-import { FiltersBlock } from '../../Components/FiltersBlock/FiltersBlock';
-import { MainDepartmentSection } from '../../Components/MainDepartmentSection/MainDepartmentSection';
-import { DynamicChartsSection } from '../../Components/DynamicChartsSection/DynamicChartsSection';
+import { FiltersBlock } from '../../Components/DepartmentPage/FiltersBlock';
+import { MainDepartmentSection } from '../../Components/DepartmentPage/MainDepartmentSection';
+import { DynamicChartsSection } from '../../Components/DepartmentPage/DynamicChartsSection';
 
 import { getSelectOptionsFromFiltersData } from '../../utils/helpers';
-
-import { setDepartmentOptions, setSkillTypeOptions, setGradeOptions } from '../../reducers/filtersOptionsSlice';
+import { setDepartmentOptions, setSkillTypeOptions, setGradeOptions } from '../../slices/filtersOptionsSlice';
+import { fetchDepartments, fetchGrades, fetchSkillTypes } from '../../slices/filtersDataSlice';
 import { useAppDispatch, useAppSelector } from '../../utils/hooks';
 
 import './departmentPage.scss';
@@ -18,52 +16,55 @@ export const DepartmentPage = () => {
 
   const currentYear = useAppSelector((state) => state.currentFilters.year);
 
+  const departments = useAppSelector((state) => state.filtersData.departments);
+  const skillTypes = useAppSelector((state) => state.filtersData.skillTypes);
+  const grades = useAppSelector((state) => state.filtersData.grades);
+
   useEffect(() => {
-    koobDataRequest3(
-      'etl_db_7.department_koob',
-      ['department'],
-      [],
-      {
-        y: ['=', currentYear],
-        data_type: ['=', 'актуальные']
-      },
-      { schema_name: 'ds_11' },
-      'ourRequest'
-    ).then((res) => {
-      const departmentOptions = getSelectOptionsFromFiltersData(res, 'department');
-      dispatch(setDepartmentOptions(departmentOptions));
-    });
-
-    koobDataRequest3(
-      'etl_db_7.department_koob',
-      ['skill_type'],
-      [],
-      {
-        y: ['=', currentYear],
-        data_type: ['=', 'актуальные']
-      },
-      { schema_name: 'ds_11' },
-      'ourRequest'
-    ).then((res) => {
-      const skillTypeOptions = getSelectOptionsFromFiltersData(res, 'skillType');
-      dispatch(setSkillTypeOptions(skillTypeOptions));
-    });
-
-    koobDataRequest3(
-      'etl_db_7.department_koob',
-      ['grade_name'],
-      [],
-      {
-        y: ['=', currentYear],
-        data_type: ['=', 'актуальные']
-      },
-      { schema_name: 'ds_11' },
-      'ourRequest'
-    ).then((res) => {
-      const gradeOptions = getSelectOptionsFromFiltersData(res, 'grade');
-      dispatch(setGradeOptions(gradeOptions));
-    });
+    dispatch(
+      fetchDepartments({
+        dimensions: ['department'],
+        filters: {
+          y: ['=', currentYear],
+          data_type: ['=', 'актуальные']
+        },
+        requestName: 'departmentsData'
+      })
+    );
+    dispatch(
+      fetchSkillTypes({
+        dimensions: ['skill_type'],
+        filters: {
+          y: ['=', currentYear],
+          data_type: ['=', 'актуальные']
+        },
+        requestName: 'skillTypesData'
+      })
+    );
+    dispatch(
+      fetchGrades({
+        dimensions: ['grade_name'],
+        filters: {
+          y: ['=', currentYear],
+          data_type: ['=', 'актуальные']
+        },
+        requestName: 'gradesData'
+      })
+    );
   }, []);
+
+  useEffect(() => {
+    if (departments.length !== 0 && skillTypes.length !== 0 && grades.length !== 0) {
+      const departmentOptions = getSelectOptionsFromFiltersData(departments, 'department');
+      dispatch(setDepartmentOptions(departmentOptions));
+
+      const skillTypeOptions = getSelectOptionsFromFiltersData(skillTypes, 'skillType');
+      dispatch(setSkillTypeOptions(skillTypeOptions));
+
+      const gradeOptions = getSelectOptionsFromFiltersData(grades, 'grade');
+      dispatch(setGradeOptions(gradeOptions));
+    }
+  }, [departments, skillTypes, grades]);
 
   return (
     <main className="departmentPage">

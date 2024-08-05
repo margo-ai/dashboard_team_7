@@ -1,18 +1,15 @@
-import React, { useEffect, useState } from 'react';
-// import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import React from 'react';
 import { Provider } from 'react-redux';
 import store from './src/store';
-import './App.scss';
 
-// @ts-ignore
-import { KoobDataService } from 'bi-internal/services';
-import { Header } from './src/Components/Header/Header';
-import { SidebarNav } from './src/Components/SidebarNav/SidebarNav';
-import { DepartmentPage } from './src/Pages/DepartmentPage/DepartmentPage';
-import { EmployeePage } from './src/Pages/EmployeePage/EmployeePage';
-const { koobDataRequest3 } = KoobDataService;
+import { Header } from './src/Components/Header';
+import { SidebarNav } from './src/Components/SidebarNav';
+import { DepartmentPage } from './src/Pages/DepartmentPage';
+import { EmployeePage } from './src/Pages/EmployeePage';
 
 import { Route } from './src/Components/Route/Route';
+
+import './App.scss';
 
 function App() {
   return (

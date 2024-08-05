@@ -1,0 +1,14 @@
+@import '../../../../../vars.scss';
+
+.skillsUpChart {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  & .haveCert {
+    fill: $haveCertColor;
+  }
+  & .haventCert {
+    fill: $haventCertColor;
+  }
+}

@@ -6,12 +6,16 @@ const { koobDataRequest3 } = KoobDataService;
 
 type TAvgSkillsState = {
   avgSkillsWithCert: TAvgSkills;
+  avgSkillsWithCertError: string;
   avgSkillsWithoutCert: TAvgSkills;
+  avgSkillsWithoutCertError: string;
 };
 
 const initialState: TAvgSkillsState = {
   avgSkillsWithCert: [],
-  avgSkillsWithoutCert: []
+  avgSkillsWithCertError: null,
+  avgSkillsWithoutCert: [],
+  avgSkillsWithoutCertError: null
 };
 
 export const fetchAvgSkillsWithCert = createAsyncThunk(
@@ -68,8 +72,9 @@ const avgSkillsSlice = createSlice({
       .addCase(fetchAvgSkillsWithCert.fulfilled, (state, action) => {
         state.avgSkillsWithCert = action.payload;
       })
-      .addCase(fetchAvgSkillsWithCert.rejected, (state) => {
+      .addCase(fetchAvgSkillsWithCert.rejected, (state, action) => {
         state.avgSkillsWithCert = [];
+        state.avgSkillsWithCertError = action.error.message;
       })
       .addCase(fetchAvgSkillsWithoutCert.pending, (state) => {
         state.avgSkillsWithoutCert = [];
@@ -77,8 +82,9 @@ const avgSkillsSlice = createSlice({
       .addCase(fetchAvgSkillsWithoutCert.fulfilled, (state, action) => {
         state.avgSkillsWithoutCert = action.payload;
       })
-      .addCase(fetchAvgSkillsWithoutCert.rejected, (state) => {
+      .addCase(fetchAvgSkillsWithoutCert.rejected, (state, action) => {
         state.avgSkillsWithoutCert = [];
+        state.avgSkillsWithoutCertError = action.error.message;
       })
       .addDefaultCase(() => {});
   }

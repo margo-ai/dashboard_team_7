@@ -90,6 +90,12 @@ module.exports = {
         exclude: /(node_modules|bower_components)/
       },
       {
+        test: /\.m?js/,
+        resolve: {
+          fullySpecified: false
+        }
+      },
+      {
         test: /\.s[ac]ss$/i,
         use: [
           'style-loader', // Creates `style` nodes from JS strings

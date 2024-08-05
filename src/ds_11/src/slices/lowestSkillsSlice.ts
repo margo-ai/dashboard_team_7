@@ -6,12 +6,16 @@ const { koobDataRequest3 } = KoobDataService;
 
 type TLowestSkills = {
   skillIds: number[];
+  skillIdsError: string;
   lowestSkillsData: { skill_id: number; skill_name: string; grade_name: string; e_id: number; sort: number }[];
+  lowestSkillsDataError: string;
 };
 
 const initialState: TLowestSkills = {
   skillIds: [],
-  lowestSkillsData: []
+  skillIdsError: null,
+  lowestSkillsData: [],
+  lowestSkillsDataError: null
 };
 
 export const fetchSkillsIds = createAsyncThunk(
@@ -78,8 +82,9 @@ const lowestSkillsSlice = createSlice({
       .addCase(fetchSkillsIds.fulfilled, (state, action) => {
         state.skillIds = action.payload;
       })
-      .addCase(fetchSkillsIds.rejected, (state) => {
+      .addCase(fetchSkillsIds.rejected, (state, action) => {
         state.skillIds = [];
+        state.skillIdsError = action.error.message;
       })
       .addCase(fetchLowestSkillsData.pending, (state) => {
         state.lowestSkillsData = [];
@@ -87,8 +92,9 @@ const lowestSkillsSlice = createSlice({
       .addCase(fetchLowestSkillsData.fulfilled, (state, action) => {
         state.lowestSkillsData = action.payload;
       })
-      .addCase(fetchLowestSkillsData.rejected, (state) => {
+      .addCase(fetchLowestSkillsData.rejected, (state, action) => {
         state.lowestSkillsData = [];
+        state.lowestSkillsDataError = action.error.message;
       })
       .addDefaultCase(() => {});
   }

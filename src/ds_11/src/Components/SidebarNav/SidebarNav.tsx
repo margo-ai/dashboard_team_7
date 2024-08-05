@@ -1,10 +1,10 @@
 import React from 'react';
 import { UrlState } from 'bi-internal/core';
 
-import { DepartmentIcon } from '../ui/iconsComponents/DepartmentIcon/DepartmentIcon';
-import { EmployeeIcon } from '../ui/iconsComponents/EmployeeIcon/EmployeeIcon';
+import { DepartmentIcon } from '../ui/iconsComponents/DepartmentIcon';
+import { EmployeeIcon } from '../ui/iconsComponents/EmployeeIcon';
 
-import { setEmployeeData, setComparisonEmployeeData } from '../../reducers/employeesSlice';
+import { setEmployeeData, setComparisonEmployeeData } from '../../slices/employeesSlice';
 import { navigateToDboard } from '../../utils/helpers';
 import { useAppDispatch } from '../../utils/hooks';
 

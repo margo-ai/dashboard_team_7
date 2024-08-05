@@ -1,14 +1,15 @@
 import React from 'react';
 
-import { EmployeeInfoTitle } from '../EmployeeInfoTitle/EmployeeInfoTitle';
-import { ComparisonTitleIcon } from '../../ui/iconsComponents/ComparisonTitleIcon/ComparisonTitleIcon';
-import { EmployeesComparisonBlock } from '../EmployeesComparisonBlock/EmployeesComparisonBlock';
+import { EmployeeInfoTitle } from '../EmployeeInfoTitle';
+import { ComparisonTitleIcon } from '../../ui/iconsComponents/ComparisonTitleIcon';
+import { EmployeesComparisonBlock } from '../EmployeesComparisonBlock';
 
-import './comparisonSection.scss';
 import { useAppSelector } from '../../../utils/hooks';
 
+import './comparisonSection.scss';
+
 export const ComparisonSection = () => {
-  const employeeData = useAppSelector((state) => state.employee.employeeData);
+  const employeeData = useAppSelector((state) => state.employees.employeeData);
 
   return (
     <section className="comparisonSection" style={{ display: `${employeeData.length !== 0 ? 'block' : 'none'}` }}>

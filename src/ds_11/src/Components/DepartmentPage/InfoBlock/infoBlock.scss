@@ -1,0 +1,61 @@
+@import '../../../../../vars.scss';
+
+.infoBlock {
+  & .statisticBlock {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    gap: 15px;
+    width: 80%;
+    max-width: 500px;
+    margin-bottom: 15px;
+  }
+}
+
+.employeesCountBlock {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+
+  margin-bottom: 15px;
+
+  &__count {
+    font-size: 96px;
+    line-height: 100px;
+    font-weight: 800;
+  }
+
+  &__title {
+    font-size: 40px;
+    font-weight: 800;
+    line-height: 42px;
+  }
+
+  &__icon {
+    width: 98px;
+    height: 92px;
+    background-color: #582cff;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.explanation {
+  background-color: #252f5f;
+  font-size: 20px;
+  font-weight: 300;
+  border-radius: 8px;
+  padding: 12px 0;
+  text-align: center;
+
+  &__plus {
+    color: $percentPlus;
+    font-weight: 900;
+  }
+  &__minus {
+    color: $percentMinus;
+    font-weight: 900;
+  }
+}

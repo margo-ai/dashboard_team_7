@@ -1,0 +1,18 @@
+@import '../../../../../vars.scss';
+
+.avgSkillsChart {
+  .recharts-line.haveCert {
+    path {
+      & {
+        stroke: $haveCertColor;
+      }
+    }
+  }
+  .recharts-line.haventCert {
+    path {
+      & {
+        stroke: $haventCertColor;
+      }
+    }
+  }
+}

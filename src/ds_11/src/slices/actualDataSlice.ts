@@ -6,16 +6,24 @@ const { koobDataRequest3 } = KoobDataService;
 
 type TActualData = {
   currentYearSkills: number;
+  currentYearSkillsError: string;
   lastYearSkills: number;
+  lastYearSkillsError: string;
   currentYearEmployees: number;
+  currentYearEmployeesError: string;
   lastYearEmployees: number;
+  lastYearEmployeesError: string;
 };
 
 const initialState: TActualData = {
   currentYearSkills: 0,
+  currentYearSkillsError: null,
   lastYearSkills: 0,
+  lastYearSkillsError: null,
   currentYearEmployees: 0,
-  lastYearEmployees: 0
+  currentYearEmployeesError: null,
+  lastYearEmployees: 0,
+  lastYearEmployeesError: null
 };
 
 export const fetchCurrentYearSkills = createAsyncThunk(
@@ -114,8 +122,9 @@ const actualDataSlice = createSlice({
       .addCase(fetchCurrentYearSkills.fulfilled, (state, action) => {
         state.currentYearSkills = action.payload;
       })
-      .addCase(fetchCurrentYearSkills.rejected, (state) => {
+      .addCase(fetchCurrentYearSkills.rejected, (state, action) => {
         state.currentYearSkills = 0;
+        state.currentYearSkillsError = action.error.message;
       })
       .addCase(fetchLastYearSkills.pending, (state) => {
         state.lastYearSkills = 0;
@@ -123,8 +132,9 @@ const actualDataSlice = createSlice({
       .addCase(fetchLastYearSkills.fulfilled, (state, action) => {
         state.lastYearSkills = action.payload;
       })
-      .addCase(fetchLastYearSkills.rejected, (state) => {
+      .addCase(fetchLastYearSkills.rejected, (state, action) => {
         state.lastYearSkills = 0;
+        state.lastYearSkillsError = action.error.message;
       })
       .addCase(fetchCurrentYearEmployees.pending, (state) => {
         state.currentYearEmployees = 0;
@@ -132,8 +142,9 @@ const actualDataSlice = createSlice({
       .addCase(fetchCurrentYearEmployees.fulfilled, (state, action) => {
         state.currentYearEmployees = action.payload;
       })
-      .addCase(fetchCurrentYearEmployees.rejected, (state) => {
+      .addCase(fetchCurrentYearEmployees.rejected, (state, action) => {
         state.currentYearEmployees = 0;
+        state.currentYearEmployeesError = action.error.message;
       })
       .addCase(fetchLastYearEmployees.pending, (state) => {
         state.lastYearEmployees = 0;
@@ -141,8 +152,9 @@ const actualDataSlice = createSlice({
       .addCase(fetchLastYearEmployees.fulfilled, (state, action) => {
         state.lastYearEmployees = action.payload;
       })
-      .addCase(fetchLastYearEmployees.rejected, (state) => {
+      .addCase(fetchLastYearEmployees.rejected, (state, action) => {
         state.lastYearEmployees = 0;
+        state.lastYearEmployeesError = action.error.message;
       })
       .addDefaultCase(() => {});
   }

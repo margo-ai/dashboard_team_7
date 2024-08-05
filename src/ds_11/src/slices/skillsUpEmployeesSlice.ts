@@ -6,12 +6,16 @@ const { koobDataRequest3 } = KoobDataService;
 
 type TSkillsUpEmployees = {
   haveCertEmployees: TSkillsUpEmployeesWithCert;
+  haveCertEmployeesError: string;
   haventCertEmployees: TSkillsUpEmployeesWithoutCert;
+  haventCertEmployeesError: string;
 };
 
 const initialState: TSkillsUpEmployees = {
   haveCertEmployees: [],
-  haventCertEmployees: []
+  haveCertEmployeesError: null,
+  haventCertEmployees: [],
+  haventCertEmployeesError: null
 };
 
 export const fetchSkillsUpEmployeesWithCert = createAsyncThunk(
@@ -68,8 +72,9 @@ const skillsUpEmployeesSlice = createSlice({
       .addCase(fetchSkillsUpEmployeesWithCert.fulfilled, (state, action) => {
         state.haveCertEmployees = action.payload;
       })
-      .addCase(fetchSkillsUpEmployeesWithCert.rejected, (state) => {
+      .addCase(fetchSkillsUpEmployeesWithCert.rejected, (state, action) => {
         state.haveCertEmployees = [];
+        state.haveCertEmployeesError = action.error.message;
       })
       .addCase(fetchSkillsUpEmployeesWithoutCert.pending, (state) => {
         state.haventCertEmployees = [];
@@ -77,8 +82,9 @@ const skillsUpEmployeesSlice = createSlice({
       .addCase(fetchSkillsUpEmployeesWithoutCert.fulfilled, (state, action) => {
         state.haventCertEmployees = action.payload;
       })
-      .addCase(fetchSkillsUpEmployeesWithoutCert.rejected, (state) => {
+      .addCase(fetchSkillsUpEmployeesWithoutCert.rejected, (state, action) => {
         state.haventCertEmployees = [];
+        state.haventCertEmployeesError = action.error.message;
       })
       .addDefaultCase(() => {});
   }

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { ResetFiltersIcon } from '../iconsComponents/ResetFiltersIcon/ResetFiltersIcon';
+import { ResetFiltersIcon } from '../iconsComponents/ResetFiltersIcon';
 
 import './resetFiltersButton.scss';
 

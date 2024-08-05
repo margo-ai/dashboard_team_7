@@ -6,14 +6,20 @@ import { TRequestParams } from '../utils/types';
 
 type TFiltersData = {
   departments: { department: string }[];
+  departmentsError: string;
   skillTypes: { skill_type: string }[];
+  skillTypesError: string;
   grades: { grade_name: string }[];
+  gradesError: string;
 };
 
 const initialState: TFiltersData = {
   departments: [],
+  departmentsError: null,
   skillTypes: [],
-  grades: []
+  skillTypesError: null,
+  grades: [],
+  gradesError: null
 };
 
 export const fetchDepartments = createAsyncThunk(
@@ -91,8 +97,9 @@ const filtersDataSlice = createSlice({
       .addCase(fetchDepartments.fulfilled, (state, action) => {
         state.departments = action.payload;
       })
-      .addCase(fetchDepartments.rejected, (state) => {
+      .addCase(fetchDepartments.rejected, (state, action) => {
         state.departments = [];
+        state.departmentsError = action.error.message;
       })
       .addCase(fetchSkillTypes.pending, (state) => {
         state.skillTypes = [];
@@ -100,8 +107,9 @@ const filtersDataSlice = createSlice({
       .addCase(fetchSkillTypes.fulfilled, (state, action) => {
         state.skillTypes = action.payload;
       })
-      .addCase(fetchSkillTypes.rejected, (state) => {
+      .addCase(fetchSkillTypes.rejected, (state, action) => {
         state.skillTypes = [];
+        state.skillTypesError = action.error.message;
       })
       .addCase(fetchGrades.pending, (state) => {
         state.grades = [];
@@ -109,8 +117,9 @@ const filtersDataSlice = createSlice({
       .addCase(fetchGrades.fulfilled, (state, action) => {
         state.grades = action.payload;
       })
-      .addCase(fetchGrades.rejected, (state) => {
+      .addCase(fetchGrades.rejected, (state, action) => {
         state.grades = [];
+        state.gradesError = action.error.message;
       })
       .addDefaultCase(() => {});
   }

@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Calendar } from 'primereact/calendar';
 
 import { minMaxDatesForCalendar } from '../../utils/constants';
 
-import { setYearFilter } from '../../reducers/currentFiltersReducer';
+import { setYearFilter } from '../../slices/currentFiltersReducer';
 import { useAppDispatch } from '../../utils/hooks';
 
 import './periodFilter.scss';

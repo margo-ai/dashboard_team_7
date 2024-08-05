@@ -1,13 +1,9 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 
 import './customTooltip.scss';
 
 export const CustomTooltip = ({ active, payload, chartType }) => {
   if (active && payload && payload.length) {
-    useEffect(() => {
-      console.log({ payload });
-    }, []);
-
     return (
       <>
         {chartType === 'bar' ? (

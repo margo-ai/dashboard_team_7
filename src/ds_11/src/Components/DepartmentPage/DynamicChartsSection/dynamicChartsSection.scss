@@ -1,0 +1,60 @@
+@import '../../../../../vars.scss';
+
+.dynamicChartsSection {
+  background-image: $backgroundGradient;
+  border-radius: 60px;
+  margin-top: 5px;
+
+  padding: 0 54px 14px 60px;
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+
+  &__filterAndLegend {
+    width: 226px;
+    margin-top: 40px;
+
+    .p-dropdown {
+      width: 226px;
+    }
+  }
+
+  &__legend {
+    background-color: #252f5f;
+    border-radius: 8px;
+    padding: 34px 0 25px 0;
+    font-size: 20px;
+    font-weight: 300;
+    text-align: center;
+    margin-top: 22px;
+
+    span {
+      font-weight: 900;
+    }
+  }
+
+  &__haveCertSpan {
+    color: $haveCertColor;
+  }
+  &__haventCertSpan {
+    color: $haventCertColor;
+  }
+
+  .skillsUpChart,
+  .avgSkillsChart {
+    width: 40%;
+
+    h2 {
+      font-size: 18px;
+      font-weight: 800;
+    }
+  }
+}
+
+.recharts-text.recharts-label {
+  tspan {
+    fill: #fff;
+    font-size: 12px;
+    font-weight: 600;
+  }
+}
